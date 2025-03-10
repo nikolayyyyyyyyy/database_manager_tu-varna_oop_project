@@ -9,18 +9,49 @@ import java.util.*;
 public class Database implements DatabaseOperation {
     private final Map<String,Table> tables;
     private final Path base;
+    private final Map<String,String> help;
 
     public Database() {
         this.tables = new LinkedHashMap<>();
         this.base = Path.of("catalog");
+
+        this.help = Map.of("open <file>", "opens the file",
+                "close", "closes the currently opened file",
+                "save", "saves the currently opened file",
+                "saveas <file>", "saves the currently opened file in the file",
+                "help","prints this information",
+                "exit","exists the program");
     }
 
     public Path getBase() {
         return base;
     }
 
+    public Map<String, Table> getTables() {
+        return tables;
+    }
+
     @Override
-    public void importTable(String fileName) throws IOException, JAXBException {
+    public String printHelp(){
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("The following command are supported:").append("\n");
+
+        for (String command:
+             this.help.keySet()) {
+
+            stringBuilder
+                    .append(command)
+                    .append("      ")
+                    .append(this.help.get(command))
+                    .append("\n");
+        }
+
+        return stringBuilder.toString();
+    }
+
+    @Override
+    public void openTable(String fileName) throws IOException, JAXBException {
         File file = new File(base.resolve(fileName).toString());
 
         String tableName = fileName.replace(".xml","");
@@ -68,7 +99,7 @@ public class Database implements DatabaseOperation {
     }
 
     @Override
-    public void exportTable(String tableName) throws JAXBException {
+    public void saveTable(String tableName) throws JAXBException {
         File file = new File(base.resolve(tableName + ".xml")
                 .toString());
 
@@ -77,7 +108,7 @@ public class Database implements DatabaseOperation {
     }
 
     @Override
-    public void exportTableAs(String oldFileName, String newFileName) throws JAXBException {
+    public void saveTableAs(String oldFileName, String newFileName) throws JAXBException {
         File file = new File(base.resolve(newFileName + ".xml")
                 .toString());
 

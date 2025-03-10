@@ -49,7 +49,8 @@ public class Table implements TableOperation {
     }
 
     @Override
-    public String selectAllRowsContain(String value) {
+    public String selectAllRowsContain(int columnIndex,String value) {
+
         return "";
     }
 
