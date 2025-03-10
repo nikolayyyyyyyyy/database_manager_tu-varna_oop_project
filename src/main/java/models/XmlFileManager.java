@@ -12,13 +12,13 @@ public class XmlFileManager {
 
         Unmarshaller unmarshaller = context.createUnmarshaller();
 
-        return (Table) unmarshaller.unmarshal(file);
+        return (Table)unmarshaller.unmarshal(file);
     }
 
     public static void writeFile(Table table, File file) throws JAXBException {
 
         JAXBContext context = JAXBContext
-                .newInstance(Database.class);
+                .newInstance(Table.class);
 
         Marshaller marshaller = context
                 .createMarshaller();

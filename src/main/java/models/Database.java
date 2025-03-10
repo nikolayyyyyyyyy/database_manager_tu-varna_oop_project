@@ -3,11 +3,8 @@ import interfaces.DatabaseOperation;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Database implements DatabaseOperation {
     private final Map<String,Table> tables;
@@ -18,17 +15,15 @@ public class Database implements DatabaseOperation {
         this.base = Path.of("catalog");
     }
 
+    public Path getBase() {
+        return base;
+    }
+
     @Override
-    public void importTable(String path) throws IOException, JAXBException {
-        if(Files.notExists(base.resolve(path))){
+    public void importTable(String fileName) throws IOException, JAXBException {
+        File file = new File(base.resolve(fileName).toString());
 
-            Files.createFile(base.resolve(path));
-        }
-        File file = new File(base.resolve(path).toString());
-
-        String tableName = Arrays.stream(path.split(" "))
-                .findFirst()
-                .orElse(null);
+        String tableName = fileName.replace(".xml","");
 
         Table table;
 
@@ -73,17 +68,27 @@ public class Database implements DatabaseOperation {
     }
 
     @Override
-    public void exportTable(String name) {
+    public void exportTable(String tableName) throws JAXBException {
+        File file = new File(base.resolve(tableName + ".xml")
+                .toString());
 
+        XmlFileManager.writeFile(this.tables.get(tableName),file);
+        this.closeTable(tableName);
     }
 
     @Override
-    public void exportTableAs(String pathName, String fileName) {
+    public void exportTableAs(String oldFileName, String newFileName) throws JAXBException {
+        File file = new File(base.resolve(newFileName + ".xml")
+                .toString());
 
+        XmlFileManager.writeFile(this.tables.get(oldFileName),file);
+        this.closeTable(oldFileName);
     }
 
     @Override
-    public String innerJoinTables(String firstTable, String firstValue, String secondTable, String secondValue) {
+    public String innerJoinTables(String firstTable, String firstValue,
+                                  String secondTable, String secondValue) {
+
         return "";
     }
 }

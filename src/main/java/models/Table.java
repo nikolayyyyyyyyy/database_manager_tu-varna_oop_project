@@ -1,11 +1,19 @@
 package models;
 import interfaces.TableOperation;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.*;
 
+@XmlRootElement
 public class Table implements TableOperation {
     private String name;
     private final Set<Column> columns;
     private final List<Row> rows;
+
+    public Table() {
+        this.columns = new LinkedHashSet<>();
+        this.rows = new ArrayList<>();
+    }
 
     public Table(String name) {
         this.name = name;
@@ -15,12 +23,29 @@ public class Table implements TableOperation {
 
     @Override
     public String printColumnTypes() {
-        return "";
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Column columnType :
+                this.columns) {
+            stringBuilder
+                    .append(columnType
+                    .getType()).append("\n");
+        }
+
+        return stringBuilder.toString();
     }
 
     @Override
     public String printRows() {
-        return "";
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Row row :
+                this.rows) {
+
+            stringBuilder.append(String.join(" ",row.getRecords()));
+        }
+
+        return stringBuilder.toString();
     }
 
     @Override
@@ -56,5 +81,20 @@ public class Table implements TableOperation {
     @Override
     public int getCountRowsContain(String value) {
         return 0;
+    }
+
+    @XmlElement(name = "tableName")
+    public String getName() {
+        return name;
+    }
+
+    @XmlElement(name = "columns")
+    public Set<Column> getColumns() {
+        return columns;
+    }
+
+    @XmlElement(name = "rows")
+    public List<Row> getRows() {
+        return rows;
     }
 }
