@@ -1,5 +1,5 @@
 package models;
 
 public enum ColumnType {
-    STRING,INTEGER,DOUBLE
+    STRING,INTEGER,DOUBLE,FLOAT
 }

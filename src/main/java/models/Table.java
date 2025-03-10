@@ -1,43 +1,60 @@
 package models;
+import interfaces.TableOperation;
+import java.util.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class Table {
+public class Table implements TableOperation {
     private String name;
-    private Set<Column> columns;
-    private Set<Record> records;
-
-    public Table() {
-    }
+    private final Set<Column> columns;
+    private final List<Row> rows;
 
     public Table(String name) {
         this.name = name;
-        this.records = new HashSet<>();
-        this.columns = new HashSet<>();
+        this.columns = new LinkedHashSet<>();
+        this.rows = new ArrayList<>();
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public String printColumnTypes() {
+        return "";
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public String printRows() {
+        return "";
     }
 
-    public Set<Column> getColumns() {
-        return columns;
+    @Override
+    public String selectAllRowsContain(String value) {
+        return "";
     }
 
-    public void setColumns(Set<Column> columns) {
-        this.columns = columns;
+    @Override
+    public void addColumn(String name, String type) {
+
     }
 
-    public Set<Record> getRecords() {
-        return records;
+    @Override
+    public void updateColumnValue(String column, String oldValue, String newValue) {
+
     }
 
-    public void setRecords(Set<Record> records) {
-        this.records = records;
+    @Override
+    public void deleteTableWhereColumnContains(String column, String value) {
+
+    }
+
+    @Override
+    public void addRow(Row record) {
+
+    }
+
+    @Override
+    public void rename(String name) {
+
+    }
+
+    @Override
+    public int getCountRowsContain(String value) {
+        return 0;
     }
 }

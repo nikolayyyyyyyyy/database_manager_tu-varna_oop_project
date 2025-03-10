@@ -1,4 +1,5 @@
 import models.Database;
+
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.Scanner;
@@ -16,7 +17,7 @@ public class Application {
             switch (arguments[0]){
                 case "open":
 
-                    database.openTable(arguments[1]);
+                    database.importTable(arguments[1]);
                     break;
                 case "close":
 
@@ -24,7 +25,7 @@ public class Application {
                     break;
                 case "showtables":
 
-                    database.printTables();
+                    System.out.print(database.printTables());
                     break;
             }
         }

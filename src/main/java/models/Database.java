@@ -1,75 +1,84 @@
 package models;
 import interfaces.DatabaseOperation;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
 public class Database implements DatabaseOperation {
-    private final Map<String, Table> openTables;
+    private final Map<String,Table> tables;
     private final Path base;
 
-    public Database(){
-        this.openTables = new LinkedHashMap<>();
+    public Database() {
+        this.tables = new LinkedHashMap<>();
         this.base = Path.of("catalog");
     }
 
     @Override
-    public void importTable(String path) throws IOException {
+    public void importTable(String path) throws IOException, JAXBException {
+        if(Files.notExists(base.resolve(path))){
 
+            Files.createFile(base.resolve(path));
+        }
+        File file = new File(base.resolve(path).toString());
+
+        String tableName = Arrays.stream(path.split(" "))
+                .findFirst()
+                .orElse(null);
+
+        Table table;
+
+        if(file.length() == 0){
+
+            table = new Table(tableName);
+        } else {
+
+            table = XmlFileManager.readFile(file);
+        }
+
+        if(this.tables.containsKey(tableName)){
+
+            ErrorLogger.log("Table already loaded.");
+            return;
+        }
+        this.tables.put(tableName,table);
     }
 
     @Override
     public String printTables() {
         StringBuilder sb = new StringBuilder();
 
-        for (String tableName :
-                this.openTables.keySet()) {
+        for (String table :
+                this.tables.keySet()) {
 
-            sb.append(tableName).append("\n");
+            sb.append(table).append("\n");
         }
+
         return sb.toString();
     }
 
     @Override
-    public void openTable(String fileName) throws IOException, JAXBException {
-        Path filePath = this.base.resolve(fileName);
-
-        if (Files.notExists(this.base)) {
-
-            Files.createDirectories(this.base);
-        }
-
-        if (Files.notExists(filePath)) {
-
-            Files.createFile(filePath);
-            return;
-        }
-
-        JAXBContext context = JAXBContext.newInstance(Table.class);
-        Unmarshaller unmarshaller = context.createUnmarshaller();
-
-        Table table = (Table) unmarshaller.unmarshal(filePath.toFile());
-        this.openTables.put(table.getName(),table);
-    }
-
-    @Override
     public void closeTable(String fileName) {
-        this.openTables.remove(fileName);
+        if(!this.tables.containsKey(fileName)){
+
+            ErrorLogger.log("Table does not exist.");
+        } else {
+
+            this.tables.remove(fileName);
+        }
     }
 
     @Override
-    public void saveTable(String name) {
+    public void exportTable(String name) {
 
     }
 
     @Override
-    public void saveAs(String pathName, String fileName) {
+    public void exportTableAs(String pathName, String fileName) {
 
     }
 

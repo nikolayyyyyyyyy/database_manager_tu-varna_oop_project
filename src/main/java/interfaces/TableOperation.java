@@ -1,5 +1,6 @@
 package interfaces;
-import models.Record;
+
+import models.Row;
 
 public interface TableOperation {
 
@@ -9,7 +10,7 @@ public interface TableOperation {
     void addColumn(String name,String type);
     void updateColumnValue(String column, String oldValue,String newValue);
     void deleteTableWhereColumnContains(String column,String value);
-    void addRow(Record record);
+    void addRow(Row record);
     void rename(String name);
     int getCountRowsContain(String value);
 }
