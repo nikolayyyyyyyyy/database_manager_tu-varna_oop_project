@@ -3,9 +3,8 @@ package interfaces;
 import models.core.Table;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
-public interface DatabaseOperation {
+public interface DatabaseManager {
     void openTable(String fileName) throws IOException;
     String printTables();
     void closeTable(String fileName);
@@ -14,5 +13,4 @@ public interface DatabaseOperation {
     String innerJoinTables(String firstTable,String firstValue,String secondTable,String secondValue);
     String printHelp();
     Table getTable(String name);
-    Path getBaseDirectory();
 }

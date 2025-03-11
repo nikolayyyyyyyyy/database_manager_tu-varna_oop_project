@@ -1,5 +1,5 @@
 package models.common;
-import interfaces.DatabaseOperation;
+import interfaces.DatabaseManager;
 import interfaces.Engine;
 import models.core.ColumnType;
 import models.core.Database;
@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class EngineImpl implements Engine {
-    private final DatabaseOperation database;
+    private final DatabaseManager database;
 
     public EngineImpl() {
         database = new Database();
@@ -36,7 +36,7 @@ public class EngineImpl implements Engine {
             try {
 
                 switch (arguments[0]) {
-                    case "import":
+                    case "open":
                         database.openTable(arguments[1]);
                         break;
 
@@ -138,10 +138,14 @@ public class EngineImpl implements Engine {
                         table = database.getTable(tableName);
                         table.updateRowValueAtIndexWhereContainsAt(columnIndex,targetColumnIndex,searchedValue,targetValue);
                         break;
+
+                    case "help":
+                        System.out.println(database.printHelp());
+                        break;
                 }
             }catch (IOException e){
 
-                ErrorLogger.log("Something occurs.");
+
             }
         }
     }

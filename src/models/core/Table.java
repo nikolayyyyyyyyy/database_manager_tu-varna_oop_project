@@ -1,17 +1,14 @@
 package models.core;
-import interfaces.RowOperation;
-import interfaces.TableOperation;
-import models.common.ErrorLogger;
-import models.common.FileValidator;
-
-import java.time.LocalDate;
+import interfaces.RowManager;
+import interfaces.TableManager;
+import models.common.BaseFileValidator;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Table implements TableOperation {
+public class Table implements TableManager {
     private String name;
     private final Set<Column> columns;
-    private final List<RowOperation> rows;
+    private final List<RowManager> rows;
 
     public Table(String name) {
         this.name = name;
@@ -27,7 +24,7 @@ public class Table implements TableOperation {
         return columns;
     }
 
-    public List<RowOperation> getRows() {
+    public List<RowManager> getRows() {
         return rows;
     }
 
@@ -49,7 +46,7 @@ public class Table implements TableOperation {
     public String printRows() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (RowOperation row :
+        for (RowManager row :
                 this.rows) {
 
             stringBuilder.append(row.print()).append("\n");
@@ -62,7 +59,7 @@ public class Table implements TableOperation {
     public String selectAllRowsContain(int columnIndex,String value) {
         StringBuilder sb = new StringBuilder();
 
-        for (RowOperation row :
+        for (RowManager row :
                 this.rows.stream()
                         .filter(r -> r.getValueAt(columnIndex).equals(value))
                         .collect(Collectors.toList())) {
@@ -78,7 +75,7 @@ public class Table implements TableOperation {
         Column column = new Column(name,type);
         this.columns.add(column);
 
-        for (RowOperation row :
+        for (RowManager row :
                 this.getRows()) {
             row.addValue("Null");
         }
@@ -86,11 +83,11 @@ public class Table implements TableOperation {
 
     @Override
     public void updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue, String newValue) {
-        List<RowOperation> rows = this.rows
+        List<RowManager> rows = this.rows
                 .stream().filter(r -> r.getValueAt(index).equals(oldValue))
                 .collect(Collectors.toList());
 
-        for (RowOperation row :
+        for (RowManager row :
                 rows) {
             row.updateValueAt(targetIndex,newValue);
         }
@@ -105,8 +102,7 @@ public class Table implements TableOperation {
     @Override
     public void addRow(String[] values) {
         if(values.length > this.columns.size()){
-            ErrorLogger.log("Length of add row values is more than column number." + LocalDate.now());
-            return;
+            //TODO
         }
 
         Row row = new Row();
@@ -114,13 +110,14 @@ public class Table implements TableOperation {
                 values) {
             row.addValue(value);
         }
+        this.rows.add(row);
     }
 
     @Override
     public void rename(String name) {
-        if(FileValidator.isFileExist(name)){
+        if(BaseFileValidator.isFileExist(name)){
 
-            ErrorLogger.log("Name is already taken,rename with another name." + LocalDate.now());
+            //TODO
         } else {
             this.name = name;
         }

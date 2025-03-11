@@ -1,10 +1,10 @@
 package models.core;
-import interfaces.RowOperation;
+import interfaces.RowManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Row implements RowOperation {
+public class Row implements RowManager {
     private final List<String> records;
 
     public Row(){
@@ -23,8 +23,7 @@ public class Row implements RowOperation {
 
     @Override
     public void updateValueAt(int index,String value) {
-        String record = this.records.get(index);
-        record = value;
+        this.records.set(index,value);
     }
 
     @Override

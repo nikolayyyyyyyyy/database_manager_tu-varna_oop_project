@@ -1,11 +1,10 @@
 package models.common;
 import interfaces.FileManage;
-import interfaces.RowOperation;
+import interfaces.RowManager;
 import models.core.Column;
 import models.core.ColumnType;
 import models.core.Row;
 import models.core.Table;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,7 +15,7 @@ public class TextFileManager implements FileManage {
 
     @Override
     public Table readFile(Path basePath, String fileName) throws IOException {
-        if(FileValidator.isFileExist(fileName)){
+        if(!BaseFileValidator.isFileExist(fileName)){
 
             Files.createFile(basePath.resolve(fileName));
 
@@ -42,13 +41,13 @@ public class TextFileManager implements FileManage {
                         .add(new Column(nameTypeOfColumn[0], ColumnType.valueOf(nameTypeOfColumn[1])));
             }
         } else {
-            String[] columnPair = rows.get(0).split(" ");
+            String[] columnPair = rows.get(0).split(",");
 
             for (String pair :
                     columnPair) {
                 String[] nameTypeOfColumn = pair.split("-");
                 table.getColumns()
-                        .add(new Column(nameTypeOfColumn[0],ColumnType.valueOf(nameTypeOfColumn[1])));
+                        .add(new Column(nameTypeOfColumn[1],ColumnType.valueOf(nameTypeOfColumn[0])));
             }
 
             String[] records = rows
@@ -86,9 +85,9 @@ public class TextFileManager implements FileManage {
             Files.writeString(baseDirectory.resolve(table.getName()), sb.toString() + "\n", StandardOpenOption.APPEND);
         }
 
-        for (RowOperation row :
+        for (RowManager row :
                 table.getRows()) {
-            Files.writeString(baseDirectory.resolve(table.getName()), String.join(" ", row.print()), StandardOpenOption.APPEND);
+            Files.writeString(baseDirectory.resolve(table.getName()), String.join(" ", row.print()) + "\n", StandardOpenOption.APPEND);
         }
     }
 }
