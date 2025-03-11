@@ -4,9 +4,7 @@ import interfaces.Engine;
 import models.core.ColumnType;
 import models.core.Database;
 import models.core.Table;
-
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -20,23 +18,14 @@ public class EngineIml implements Engine {
     @Override
     public void run()  {
 
-
         Scanner scanner = new Scanner(System.in);
-
-        if(Files.notExists(database.getBaseDirectory())){
-
-            try {
-                Files.createDirectory(database.getBaseDirectory());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
 
         while(true){
             System.out.print("> ");
             String command = scanner.nextLine();
             String[] arguments = command.split(" ");
             String tableName;
+            String searchedValue;
             int columnIndex;
             Table table;
 
@@ -70,7 +59,7 @@ public class EngineIml implements Engine {
 
                     case "select":
                         columnIndex = Integer.parseInt(arguments[1]);
-                        String searchedValue = arguments[2];
+                        searchedValue = arguments[2];
                         tableName = arguments[3];
 
                         table = database.getTable(tableName);
@@ -110,6 +99,30 @@ public class EngineIml implements Engine {
                         table.rename(newName);
                         break;
 
+                    case "count":
+                        tableName = arguments[1];
+                        columnIndex = Integer.parseInt(arguments[2]);
+                        searchedValue = arguments[3];
+
+                        table = database.getTable(tableName);
+                        System.out.print(table.getCountRowsContainAt(columnIndex,searchedValue));
+                        break;
+
+                    case "delete":
+                        tableName = arguments[1];
+                        columnIndex = Integer.parseInt(arguments[2]);
+                        searchedValue = arguments[3];
+
+                        table = database.getTable(tableName);
+                        table.deleteTableWhereRowContainsAt(columnIndex,searchedValue);
+                        break;
+
+                    case "describe":
+                        tableName = arguments[1];
+                        table = database.getTable(tableName);
+
+                        System.out.println(table.printColumnTypes());
+                        break;
                 }
             }catch (IOException e){
 

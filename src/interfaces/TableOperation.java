@@ -9,8 +9,8 @@ public interface TableOperation {
     String selectAllRowsContain(int columnIndex,String value);
     void addColumn(String name, ColumnType type);
     void updateColumnValue(String column, String oldValue,String newValue);
-    void deleteTableWhereColumnContains(String column,String value);
+    void deleteTableWhereRowContainsAt(int index,String value);
     void addRow(String[] values);
     void rename(String name);
-    int getCountRowsContain(String value);
+    int getCountRowsContainAt(int index,String value);
 }

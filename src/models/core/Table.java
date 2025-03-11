@@ -5,6 +5,7 @@ import models.common.FileValidator;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Table implements TableOperation {
     private String name;
@@ -20,6 +21,7 @@ public class Table implements TableOperation {
     public String getName() {
         return name;
     }
+
     public Set<Column> getColumns() {
         return columns;
     }
@@ -57,8 +59,17 @@ public class Table implements TableOperation {
 
     @Override
     public String selectAllRowsContain(int columnIndex,String value) {
+        StringBuilder sb = new StringBuilder();
 
-        return "";
+        for (Row row :
+                this.rows.stream()
+                        .filter(r -> r.getRecords().get(columnIndex).equals(value))
+                        .collect(Collectors.toList())) {
+
+            sb.append(String.join(" ", row.getRecords())).append("\n");
+        }
+
+        return sb.toString();
     }
 
     @Override
@@ -78,8 +89,9 @@ public class Table implements TableOperation {
     }
 
     @Override
-    public void deleteTableWhereColumnContains(String column, String value) {
-
+    public void deleteTableWhereRowContainsAt(int index, String value) {
+        this.rows
+                .removeIf(r -> r.getRecords().get(index).equals(value));
     }
 
     @Override
@@ -107,8 +119,11 @@ public class Table implements TableOperation {
     }
 
     @Override
-    public int getCountRowsContain(String value) {
-        return 0;
+    public int getCountRowsContainAt(int index,String value) {
+        return (int)this.rows
+                .stream()
+                .filter(r -> r.getRecords().get(index).equals(value))
+                .count();
     }
 
 }
