@@ -8,7 +8,7 @@ public interface TableOperation {
     String printRows();
     String selectAllRowsContain(int columnIndex,String value);
     void addColumn(String name, ColumnType type);
-    void updateColumnValue(String column, String oldValue,String newValue);
+    void updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue,String newValue);
     void deleteTableWhereRowContainsAt(int index,String value);
     void addRow(String[] values);
     void rename(String name);

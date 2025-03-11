@@ -1,4 +1,5 @@
 package models.core;
+import interfaces.RowOperation;
 import interfaces.TableOperation;
 import models.common.ErrorLogger;
 import models.common.FileValidator;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 public class Table implements TableOperation {
     private String name;
     private final Set<Column> columns;
-    private final List<Row> rows;
+    private final List<RowOperation> rows;
 
     public Table(String name) {
         this.name = name;
@@ -26,7 +27,7 @@ public class Table implements TableOperation {
         return columns;
     }
 
-    public List<Row> getRows() {
+    public List<RowOperation> getRows() {
         return rows;
     }
 
@@ -48,10 +49,10 @@ public class Table implements TableOperation {
     public String printRows() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (Row row :
+        for (RowOperation row :
                 this.rows) {
 
-            stringBuilder.append(String.join(" ",row.getRecords()));
+            stringBuilder.append(row.print()).append("\n");
         }
 
         return stringBuilder.toString();
@@ -61,12 +62,12 @@ public class Table implements TableOperation {
     public String selectAllRowsContain(int columnIndex,String value) {
         StringBuilder sb = new StringBuilder();
 
-        for (Row row :
+        for (RowOperation row :
                 this.rows.stream()
-                        .filter(r -> r.getRecords().get(columnIndex).equals(value))
+                        .filter(r -> r.getValueAt(columnIndex).equals(value))
                         .collect(Collectors.toList())) {
 
-            sb.append(String.join(" ", row.getRecords())).append("\n");
+            sb.append(row.print()).append("\n");
         }
 
         return sb.toString();
@@ -77,21 +78,28 @@ public class Table implements TableOperation {
         Column column = new Column(name,type);
         this.columns.add(column);
 
-        for (Row row :
+        for (RowOperation row :
                 this.getRows()) {
-            row.getRecords().add("Null");
+            row.addValue("Null");
         }
     }
 
     @Override
-    public void updateColumnValue(String column, String oldValue, String newValue) {
+    public void updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue, String newValue) {
+        List<RowOperation> rows = this.rows
+                .stream().filter(r -> r.getValueAt(index).equals(oldValue))
+                .collect(Collectors.toList());
 
+        for (RowOperation row :
+                rows) {
+            row.updateValueAt(targetIndex,newValue);
+        }
     }
 
     @Override
     public void deleteTableWhereRowContainsAt(int index, String value) {
         this.rows
-                .removeIf(r -> r.getRecords().get(index).equals(value));
+                .removeIf(r -> r.getValueAt(index).equals(value));
     }
 
     @Override
@@ -104,7 +112,7 @@ public class Table implements TableOperation {
         Row row = new Row();
         for (String value :
                 values) {
-            row.getRecords().add(value);
+            row.addValue(value);
         }
     }
 
@@ -122,7 +130,7 @@ public class Table implements TableOperation {
     public int getCountRowsContainAt(int index,String value) {
         return (int)this.rows
                 .stream()
-                .filter(r -> r.getRecords().get(index).equals(value))
+                .filter(r -> r.getValueAt(index).equals(value))
                 .count();
     }
 

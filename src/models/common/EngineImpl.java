@@ -8,10 +8,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class EngineIml implements Engine {
+public class EngineImpl implements Engine {
     private final DatabaseOperation database;
 
-    public EngineIml() {
+    public EngineImpl() {
         database = new Database();
     }
 
@@ -23,11 +23,15 @@ public class EngineIml implements Engine {
         while(true){
             System.out.print("> ");
             String command = scanner.nextLine();
+
             String[] arguments = command.split(" ");
+
             String tableName;
             String searchedValue;
             int columnIndex;
             Table table;
+            int targetColumnIndex;
+            String targetValue;
 
             try {
 
@@ -122,6 +126,17 @@ public class EngineIml implements Engine {
                         table = database.getTable(tableName);
 
                         System.out.println(table.printColumnTypes());
+                        break;
+
+                    case "update":
+                        tableName = arguments[1];
+                        columnIndex = Integer.parseInt(arguments[2]);
+                        searchedValue = arguments[3];
+                        targetColumnIndex = Integer.parseInt(arguments[4]);
+                        targetValue = arguments[5];
+
+                        table = database.getTable(tableName);
+                        table.updateRowValueAtIndexWhereContainsAt(columnIndex,targetColumnIndex,searchedValue,targetValue);
                         break;
                 }
             }catch (IOException e){

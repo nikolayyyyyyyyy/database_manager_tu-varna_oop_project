@@ -1,5 +1,6 @@
 package models.common;
 import interfaces.FileManage;
+import interfaces.RowOperation;
 import models.core.Column;
 import models.core.ColumnType;
 import models.core.Row;
@@ -63,7 +64,7 @@ public class TextFileManager implements FileManage {
 
                 for (String value :
                         values) {
-                    row.getRecords().add(value);
+                    row.addValue(value);
                 }
 
                 table.getRows().add(row);
@@ -85,9 +86,9 @@ public class TextFileManager implements FileManage {
             Files.writeString(baseDirectory.resolve(table.getName()), sb.toString() + "\n", StandardOpenOption.APPEND);
         }
 
-        for (Row row :
+        for (RowOperation row :
                 table.getRows()) {
-            Files.writeString(baseDirectory.resolve(table.getName()), String.join(" ", row.getRecords()), StandardOpenOption.APPEND);
+            Files.writeString(baseDirectory.resolve(table.getName()), String.join(" ", row.print()), StandardOpenOption.APPEND);
         }
     }
 }
