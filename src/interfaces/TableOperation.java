@@ -1,7 +1,6 @@
 package interfaces;
 
-import models.ColumnType;
-import models.Row;
+import models.core.ColumnType;
 
 public interface TableOperation {
 

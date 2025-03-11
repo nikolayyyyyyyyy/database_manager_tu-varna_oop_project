@@ -1,5 +1,5 @@
 package interfaces;
-import models.Table;
+import models.core.Table;
 import java.io.IOException;
 import java.nio.file.Path;
 

@@ -1,10 +1,9 @@
 import interfaces.Engine;
-import models.EngineIml;
-import java.io.IOException;
+import models.common.EngineIml;
 
 public class Application {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         Engine engine = new EngineIml();
         engine.run();

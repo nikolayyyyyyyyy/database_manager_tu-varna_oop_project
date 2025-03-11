@@ -1,6 +1,9 @@
-package models;
+package models.core;
 import interfaces.DatabaseOperation;
 import interfaces.FileManage;
+import models.common.ErrorLogger;
+import models.common.TextFileManager;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -1,6 +1,9 @@
-package models;
+package models.common;
 import interfaces.DatabaseOperation;
 import interfaces.Engine;
+import models.core.ColumnType;
+import models.core.Database;
+import models.core.Table;
 
 import java.io.IOException;
 import java.nio.file.Files;

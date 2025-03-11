@@ -1,4 +1,4 @@
-package models;
+package models.core;
 
 public class Column {
     private String name;

@@ -1,5 +1,7 @@
-package models;
+package models.core;
 import interfaces.TableOperation;
+import models.common.ErrorLogger;
+import models.common.FileValidator;
 
 import java.time.LocalDate;
 import java.util.*;

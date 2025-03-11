@@ -1,5 +1,10 @@
-package models;
+package models.common;
 import interfaces.FileManage;
+import models.core.Column;
+import models.core.ColumnType;
+import models.core.Row;
+import models.core.Table;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,7 +14,7 @@ import java.util.List;
 public class TextFileManager implements FileManage {
 
     @Override
-    public Table readFile(Path basePath,String fileName) throws IOException {
+    public Table readFile(Path basePath, String fileName) throws IOException {
         if(FileValidator.isFileExist(fileName)){
 
             Files.createFile(basePath.resolve(fileName));
@@ -33,7 +38,7 @@ public class TextFileManager implements FileManage {
                     columnPair) {
                 String[] nameTypeOfColumn = pair.split("-");
                 table.getColumns()
-                        .add(new Column(nameTypeOfColumn[0],ColumnType.valueOf(nameTypeOfColumn[1])));
+                        .add(new Column(nameTypeOfColumn[0], ColumnType.valueOf(nameTypeOfColumn[1])));
             }
         } else {
             String[] columnPair = rows.get(0).split(" ");
