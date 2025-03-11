@@ -7,11 +7,6 @@ public class Table implements TableOperation {
     private final Set<Column> columns;
     private final List<Row> rows;
 
-    public Table() {
-        this.columns = new LinkedHashSet<>();
-        this.rows = new ArrayList<>();
-    }
-
     public Table(String name) {
         this.name = name;
         this.columns = new LinkedHashSet<>();

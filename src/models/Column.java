@@ -4,9 +4,6 @@ public class Column {
     private String name;
     private ColumnType type;
 
-    public Column() {
-    }
-
     public Column(String name, ColumnType type){
         this.name = name;
         this.type = type;
