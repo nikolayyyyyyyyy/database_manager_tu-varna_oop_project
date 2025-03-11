@@ -1,8 +1,6 @@
 package models;
 import interfaces.DatabaseOperation;
-import javax.xml.bind.JAXBException;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -51,7 +49,7 @@ public class Database implements DatabaseOperation {
     }
 
     @Override
-    public void openTable(String fileName) throws IOException, JAXBException {
+    public void openTable(String fileName){
         File file = new File(base.resolve(fileName).toString());
 
         String tableName = fileName.replace(".xml","");
@@ -63,15 +61,14 @@ public class Database implements DatabaseOperation {
             table = new Table(tableName);
         } else {
 
-            table = XmlFileManager.readFile(file);
         }
 
-        if(this.tables.containsKey(tableName)){
-
-            ErrorLogger.log("Table already loaded.");
-            return;
-        }
-        this.tables.put(tableName,table);
+//        if(this.tables.containsKey(tableName)){
+//
+//            ErrorLogger.log("Table already loaded.");
+//            return;
+//        }
+//        this.tables.put(tableName,table);
     }
 
     @Override
@@ -99,20 +96,18 @@ public class Database implements DatabaseOperation {
     }
 
     @Override
-    public void saveTable(String tableName) throws JAXBException {
+    public void saveTable(String tableName) {
         File file = new File(base.resolve(tableName + ".xml")
                 .toString());
 
-        XmlFileManager.writeFile(this.tables.get(tableName),file);
         this.closeTable(tableName);
     }
 
     @Override
-    public void saveTableAs(String oldFileName, String newFileName) throws JAXBException {
+    public void saveTableAs(String oldFileName, String newFileName) {
         File file = new File(base.resolve(newFileName + ".xml")
                 .toString());
 
-        XmlFileManager.writeFile(this.tables.get(oldFileName),file);
         this.closeTable(oldFileName);
     }
 

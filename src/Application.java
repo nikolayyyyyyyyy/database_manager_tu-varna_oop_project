@@ -1,12 +1,11 @@
 import models.Database;
 import models.Table;
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Scanner;
 
 public class Application {
-    public static void main(String[] args) throws JAXBException, IOException {
+    public static void main(String[] args) throws IOException {
         Database database = new Database();
         Scanner scanner = new Scanner(System.in);
 

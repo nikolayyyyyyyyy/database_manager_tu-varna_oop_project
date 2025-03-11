@@ -1,10 +1,7 @@
 package models;
 import interfaces.TableOperation;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.*;
 
-@XmlRootElement
 public class Table implements TableOperation {
     private String name;
     private final Set<Column> columns;
@@ -84,17 +81,14 @@ public class Table implements TableOperation {
         return 0;
     }
 
-    @XmlElement(name = "tableName")
     public String getName() {
         return name;
     }
 
-    @XmlElement(name = "columns")
     public Set<Column> getColumns() {
         return columns;
     }
 
-    @XmlElement(name = "rows")
     public List<Row> getRows() {
         return rows;
     }
