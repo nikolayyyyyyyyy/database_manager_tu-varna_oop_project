@@ -1,6 +1,8 @@
 package models;
 import interfaces.DatabaseOperation;
-import java.io.File;
+import interfaces.FileManage;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -8,25 +10,18 @@ public class Database implements DatabaseOperation {
     private final Map<String,Table> tables;
     private final Path base;
     private final Map<String,String> help;
+    private final FileManage fileManage;
 
     public Database() {
         this.tables = new LinkedHashMap<>();
         this.base = Path.of("catalog");
-
+        this.fileManage = new TextFileManager();
         this.help = Map.of("open <file>", "opens the file",
                 "close", "closes the currently opened file",
                 "save", "saves the currently opened file",
                 "saveas <file>", "saves the currently opened file in the file",
                 "help","prints this information",
                 "exit","exists the program");
-    }
-
-    public Path getBase() {
-        return base;
-    }
-
-    public Map<String, Table> getTables() {
-        return tables;
     }
 
     @Override
@@ -49,26 +44,31 @@ public class Database implements DatabaseOperation {
     }
 
     @Override
-    public void openTable(String fileName){
-        File file = new File(base.resolve(fileName).toString());
+    public Table getTable(String name) {
+        return this.tables.get(name);
+    }
 
-        String tableName = fileName.replace(".xml","");
+    @Override
+    public Path getBaseDirectory() {
+        return this.base;
+    }
 
-        Table table;
+    @Override
+    public void openTable(String fileName) {
+        try {
+            Table table = fileManage.readFile(this.base, fileName);
 
-        if(file.length() == 0){
+            if(this.tables.containsKey(table.getName())){
 
-            table = new Table(tableName);
-        } else {
+                ErrorLogger.log("Table already loaded.");
+                return;
+            }
+            this.tables.put(table.getName(),table);
+        }catch (IOException e){
 
+            System.out.println("Check ErrorLogger");
+            System.exit(0);
         }
-
-//        if(this.tables.containsKey(tableName)){
-//
-//            ErrorLogger.log("Table already loaded.");
-//            return;
-//        }
-//        this.tables.put(tableName,table);
     }
 
     @Override
@@ -97,18 +97,31 @@ public class Database implements DatabaseOperation {
 
     @Override
     public void saveTable(String tableName) {
-        File file = new File(base.resolve(tableName + ".xml")
-                .toString());
 
+        try {
+            this.fileManage.writeFile(base, this.tables.get(tableName));
+        } catch (IOException e){
+
+            System.out.println("Check ErrorLogger.");
+            System.exit(0);
+        }
         this.closeTable(tableName);
     }
 
     @Override
     public void saveTableAs(String oldFileName, String newFileName) {
-        File file = new File(base.resolve(newFileName + ".xml")
-                .toString());
+        try {
+            Files.delete(this.base.resolve(oldFileName));
+            Table table = this.tables.get(oldFileName);
 
-        this.closeTable(oldFileName);
+            table.rename(newFileName);
+            this.fileManage.writeFile(base, table);
+            this.closeTable(oldFileName);
+        }catch (IOException e){
+
+            System.out.println("Check ErrorLogger");
+            System.exit(0);
+        }
     }
 
     @Override

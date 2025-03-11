@@ -9,6 +9,14 @@ public class Column {
         this.type = type;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(ColumnType type) {
+        this.type = type;
+    }
+
     public String getName() {
         return name;
     }
