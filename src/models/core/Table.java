@@ -1,4 +1,5 @@
 package models.core;
+import exception.DomainException;
 import interfaces.RowManager;
 import interfaces.TableManager;
 import models.common.BaseFileValidator;
@@ -39,7 +40,7 @@ public class Table implements TableManager {
                     .getType()).append("\n");
         }
 
-        return stringBuilder.toString();
+        return stringBuilder.toString().trim();
     }
 
     @Override
@@ -52,7 +53,7 @@ public class Table implements TableManager {
             stringBuilder.append(row.print()).append("\n");
         }
 
-        return stringBuilder.toString();
+        return stringBuilder.toString().trim();
     }
 
     @Override
@@ -67,12 +68,16 @@ public class Table implements TableManager {
             sb.append(row.print()).append("\n");
         }
 
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     @Override
     public void addColumn(String name, ColumnType type) {
         Column column = new Column(name,type);
+        if (this.columns.contains(column)){
+
+            throw new DomainException("Column already exist");
+        }
         this.columns.add(column);
 
     if(!rows.isEmpty()) {
@@ -85,6 +90,11 @@ public class Table implements TableManager {
 
     @Override
     public void updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue, String newValue) {
+        if(index > this.columns.size() || targetIndex > this.columns.size()){
+
+            throw new DomainException("Index out of range exception");
+        }
+
         List<RowManager> rows = this.rows
                 .stream().filter(r -> r.getValueAt(index).equals(oldValue))
                 .collect(Collectors.toList());
@@ -105,8 +115,9 @@ public class Table implements TableManager {
     public void addRow(String[] values) {
         if(values.length > this.columns.size()){
 
-            System.out.println("The values are more than columns.");
+            throw new DomainException("Too many values for the column count.");
         } else {
+
             Row row = new Row();
             for (String value :
                     values) {
@@ -120,7 +131,7 @@ public class Table implements TableManager {
     public void rename(String name) {
         if(BaseFileValidator.isFileExist(name)){
 
-            //TODO
+            throw new DomainException("File with this name already exist.");
         } else {
             this.name = name;
         }
