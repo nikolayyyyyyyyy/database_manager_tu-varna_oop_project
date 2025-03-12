@@ -14,63 +14,68 @@ import java.util.List;
 public class TextFileManager implements FileManage {
 
     @Override
-    public Table readFile(Path basePath, String fileName) throws IOException {
-        if(!BaseFileValidator.isFileExist(fileName)){
+    public Table readFile(Path basePath, String fileName) {
+        try {
+            if (!BaseFileValidator.isFileExist(fileName)) {
 
-            Files.createFile(basePath.resolve(fileName));
+                Files.createFile(basePath.resolve(fileName));
 
-            return new Table(fileName);
-        }
-
-        List<String> rows = Files.readAllLines(basePath.resolve(fileName));
-
-        if(rows.isEmpty()){
-
-            return new Table(fileName);
-        }
-        Table table = new Table(fileName);
-
-        if(rows.size() == 1){
-
-            String[] columnPair = rows.get(0).split(",");
-
-            for (String pair :
-                    columnPair) {
-                String[] nameTypeOfColumn = pair.split("-");
-                table.getColumns()
-                        .add(new Column(nameTypeOfColumn[0], ColumnType.valueOf(nameTypeOfColumn[1])));
-            }
-        } else {
-            String[] columnPair = rows.get(0).split(",");
-
-            for (String pair :
-                    columnPair) {
-                String[] nameTypeOfColumn = pair.split("-");
-                table.getColumns()
-                        .add(new Column(nameTypeOfColumn[1],ColumnType.valueOf(nameTypeOfColumn[0])));
+                return new Table(fileName);
             }
 
-            String[] records = rows
-                    .stream()
-                    .skip(1)
-                    .toArray(String[]::new);
+            List<String> rows = Files.readAllLines(basePath.resolve(fileName));
 
-            for (String record :
-                    records) {
-                String[] values = record.split(" ");
+            if (rows.isEmpty()) {
 
-                Row row = new Row();
+                return new Table(fileName);
+            }
+            Table table = new Table(fileName);
 
-                for (String value :
-                        values) {
-                    row.addValue(value);
+            if (rows.size() == 1) {
+
+                String[] columnPair = rows.get(0).split(",");
+
+                for (String pair :
+                        columnPair) {
+                    String[] nameTypeOfColumn = pair.split("-");
+                    table.addColumn(nameTypeOfColumn[0], ColumnType.valueOf(nameTypeOfColumn[1]));
+                }
+            } else {
+                String[] columnPair = rows.get(0).split(",");
+
+                for (String pair :
+                        columnPair) {
+                    String[] nameTypeOfColumn = pair.split("-");
+                    table.addColumn(nameTypeOfColumn[1], ColumnType.valueOf(nameTypeOfColumn[0]));
                 }
 
-                table.getRows().add(row);
-            }
-        }
+                String[] records = rows
+                        .stream()
+                        .skip(1)
+                        .toArray(String[]::new);
 
-        return table;
+                for (String record :
+                        records) {
+                    String[] values = record.split(" ");
+
+                    Row row = new Row();
+
+                    for (String value :
+                            values) {
+                        row.addValue(value);
+                    }
+
+                    table.getRows().add(row);
+                }
+            }
+
+            return table;
+        }catch (IOException e){
+
+            System.out.println("Cannot read file ->".concat(fileName));
+            System.exit(0);
+        }
+        return null;
     }
 
     @Override

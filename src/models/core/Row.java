@@ -1,6 +1,5 @@
 package models.core;
 import interfaces.RowManager;
-
 import java.util.ArrayList;
 import java.util.List;
 

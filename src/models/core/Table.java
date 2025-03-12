@@ -75,9 +75,11 @@ public class Table implements TableManager {
         Column column = new Column(name,type);
         this.columns.add(column);
 
+    if(!rows.isEmpty()) {
         for (RowManager row :
                 this.getRows()) {
             row.addValue("Null");
+            }
         }
     }
 
@@ -102,15 +104,16 @@ public class Table implements TableManager {
     @Override
     public void addRow(String[] values) {
         if(values.length > this.columns.size()){
-            //TODO
-        }
 
-        Row row = new Row();
-        for (String value :
-                values) {
-            row.addValue(value);
+            System.out.println("The values are more than columns.");
+        } else {
+            Row row = new Row();
+            for (String value :
+                    values) {
+                row.addValue(value);
+            }
+            this.rows.add(row);
         }
-        this.rows.add(row);
     }
 
     @Override

@@ -5,7 +5,7 @@ import models.core.Table;
 import java.io.IOException;
 
 public interface DatabaseManager {
-    void openTable(String fileName) throws IOException;
+    boolean openTable(String fileName) throws IOException;
     String printTables();
     void closeTable(String fileName);
     void saveTable(String tableName);

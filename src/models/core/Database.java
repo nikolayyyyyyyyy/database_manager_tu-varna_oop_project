@@ -48,26 +48,30 @@ public class Database implements DatabaseManager {
     }
 
     @Override
-    public void openTable(String fileName) {
+    public boolean openTable(String fileName) {
         try {
-            Table table = fileManage.readFile(BaseFileValidator.getBase(), fileName);
+            Table table = fileManage
+                    .readFile(BaseFileValidator.getBase(), fileName);
 
-            if(this.tables.containsKey(table.getName())){
+            if (this.tables.containsKey(table.getName())) {
 
-                //TODO
-                return;
+                return false;
             }
-            this.tables.put(table.getName(),table);
-        }catch (IOException e){
+
+            this.tables.put(table.getName(), table);
+        }catch (IOException e) {
 
             System.out.println("Check ErrorLogger");
             System.exit(0);
         }
+
+        return true;
     }
 
     @Override
     public String printTables() {
         StringBuilder sb = new StringBuilder();
+        sb.append("Opened tables:").append("\n");
 
         for (String table :
                 this.tables.keySet()) {
@@ -82,24 +86,26 @@ public class Database implements DatabaseManager {
     public void closeTable(String fileName) {
         if(!this.tables.containsKey(fileName)){
 
-            //TODO
+            System.out.println("Table ->".concat(fileName).concat(" is not loaded"));
         } else {
 
             this.tables.remove(fileName);
+            System.out.println("Closed table ->".concat(fileName));
         }
     }
 
     @Override
     public void saveTable(String tableName) {
-
         try {
-            this.fileManage.writeFile(BaseFileValidator.getBase(), this.tables.get(tableName));
-        } catch (IOException e){
 
-            System.out.println("Check ErrorLogger.");
-            System.exit(0);
+            this.fileManage.writeFile(BaseFileValidator.getBase(), this.tables.get(tableName));
+
+            System.out.println("Saved table ->".concat(tableName));
+            this.closeTable(tableName);
+
+        } catch (IOException e){
+            System.out.println("Error with saving the table ->".concat(tableName));
         }
-        this.closeTable(tableName);
     }
 
     @Override
