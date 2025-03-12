@@ -1,10 +1,10 @@
 package models.core;
+import exception.DomainException;
 import interfaces.DatabaseManager;
 import interfaces.FileManage;
 import models.common.BaseFileValidator;
 import models.common.TextFileManager;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 
 public class Database implements DatabaseManager {
@@ -39,33 +39,30 @@ public class Database implements DatabaseManager {
                     .append("\n");
         }
 
-        return stringBuilder.toString();
+        return stringBuilder.toString().trim();
     }
 
     @Override
     public Table getTable(String name) {
+        if(!this.tables.containsKey(name)) {
+
+            throw new DomainException("Table with %s is not loaded".formatted(name));
+        }
+
         return this.tables.get(name);
     }
 
     @Override
-    public boolean openTable(String fileName) {
-        try {
-            Table table = fileManage
-                    .readFile(BaseFileValidator.getBase(), fileName);
+    public void openTable(String fileName) throws IOException {
+        Table table = fileManage
+                .readFile(BaseFileValidator.getBase(), fileName);
 
-            if (this.tables.containsKey(table.getName())) {
+        if (this.tables.containsKey(table.getName())) {
 
-                return false;
-            }
-
-            this.tables.put(table.getName(), table);
-        }catch (IOException e) {
-
-            System.out.println("Check ErrorLogger");
-            System.exit(0);
+            throw new DomainException("Table %s is already opened.".formatted(fileName).replace(".txt",""));
         }
 
-        return true;
+        this.tables.put(table.getName().replace(".txt",""), table);
     }
 
     @Override
@@ -79,49 +76,41 @@ public class Database implements DatabaseManager {
             sb.append(table).append("\n");
         }
 
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     @Override
     public void closeTable(String fileName) {
         if(!this.tables.containsKey(fileName)){
 
-            System.out.println("Table ->".concat(fileName).concat(" is not loaded"));
+            throw new DomainException("Table %s is not loaded.".formatted(fileName).replace(".txt",""));
         } else {
 
             this.tables.remove(fileName);
-            System.out.println("Closed table ->".concat(fileName));
+            System.out.println("Closed table -> ".concat(fileName));
         }
     }
 
     @Override
-    public void saveTable(String tableName) {
-        try {
+    public void saveTable(String tableName) throws IOException {
 
-            this.fileManage.writeFile(BaseFileValidator.getBase(), this.tables.get(tableName));
+        this.fileManage.writeFile(BaseFileValidator.getBase(), this.tables.get(tableName));
 
-            System.out.println("Saved table ->".concat(tableName));
-            this.closeTable(tableName);
-
-        } catch (IOException e){
-            System.out.println("Error with saving the table ->".concat(tableName));
-        }
+        System.out.println("Saved table ->".concat(tableName));
+        this.closeTable(tableName);
     }
 
     @Override
-    public void saveTableAs(String oldFileName, String newFileName) {
-        try {
-            Files.delete(BaseFileValidator.getBase().resolve(oldFileName));
-            Table table = this.tables.get(oldFileName);
+    public void saveTableAs(String oldFileName, String newFileName) throws IOException {
+        if(BaseFileValidator.isFileExist(newFileName)){
 
-            table.rename(newFileName);
-            this.fileManage.writeFile(BaseFileValidator.getBase(), table);
-            this.closeTable(oldFileName);
-        }catch (IOException e){
-
-            System.out.println("Check ErrorLogger");
-            System.exit(0);
+            throw new DomainException("Name is already existing.");
         }
+        Table table = this.tables.get(oldFileName);
+
+        table.rename(newFileName);
+        this.fileManage.writeFile(BaseFileValidator.getBase(), table);
+        this.closeTable(oldFileName);
     }
 
     @Override
