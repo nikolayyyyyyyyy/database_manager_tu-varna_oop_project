@@ -15,7 +15,7 @@ public class AddColumnCommand implements Command {
     public void execute(String... command) {
         String tableName = command[0];
         String columnName = command[1];
-        ColumnType columnType = ColumnType.valueOf(command[3]);
+        ColumnType columnType = ColumnType.valueOf(command[2]);
 
         Table table = this.databaseManager.getTable(tableName);
 

@@ -28,13 +28,12 @@ public class DatabaseEngine implements Engine {
         Command command;
 
         while(true){
-
             System.out.print("> ");
-            String commandInput = this.scanner.nextLine();
-            String[] arguments = commandInput.split(" ");
+
+            String input = this.scanner.nextLine();
+            String[] arguments = input.split(" ");
 
             command = commands.get(arguments[0]);
-
             command.execute(Arrays
                     .stream(arguments)
                     .skip(1)
@@ -58,5 +57,6 @@ public class DatabaseEngine implements Engine {
         commands.put("select", new SelectCommand(this.databaseManager));
         commands.put("showtables", new ShowTableCommand(this.databaseManager));
         commands.put("update", new UpdateCommand(this.databaseManager));
+        commands.put("save", new SaveCommand(this.databaseManager));
     }
 }
