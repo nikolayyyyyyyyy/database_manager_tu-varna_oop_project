@@ -25,7 +25,7 @@ public class TableImpl implements Table {
 
     @Override
     public Set<Column> getColumns() {
-        return Set.of();
+        return this.columns;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class TableImpl implements Table {
     public String printColumnTypes() {
         if(this.columns.isEmpty()){
 
-            return String.format("TableImpl %s has no columnImpls.",this.name);
+            return String.format("Table %s has no column.",this.name);
         }
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -53,7 +53,7 @@ public class TableImpl implements Table {
     public void printRows() {
         if(this.rows.isEmpty()){
 
-            System.out.printf("TableImpl %s has no records.", this.name);
+            System.out.printf("Table %s has no records.", this.name);
         }
 
         for (Row row :
@@ -92,7 +92,7 @@ public class TableImpl implements Table {
         ColumnImpl columnImpl = new ColumnImpl(name,type);
         if (this.columns.contains(columnImpl)){
 
-            throw new DomainException("ColumnImpl already exist");
+            throw new DomainException("Column already exist");
         }
         this.columns.add(columnImpl);
 

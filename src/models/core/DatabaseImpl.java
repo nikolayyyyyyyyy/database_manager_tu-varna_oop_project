@@ -47,7 +47,7 @@ public class DatabaseImpl implements interfaces.Database {
     public Table getTable(String name) {
         if(!this.tables.containsKey(name)) {
 
-            throw new DomainException("TableImpl with %s is not loaded " + name);
+            throw new DomainException("Table with %s is not loaded " + name);
         }
 
         return this.tables.get(name);
@@ -60,7 +60,7 @@ public class DatabaseImpl implements interfaces.Database {
 
         if (this.tables.containsKey(tableImpl.getName())) {
 
-            throw new DomainException("TableImpl %s is already opened. " + fileName.replace(".txt",""));
+            throw new DomainException("Table %s is already opened. " + fileName.replace(".txt",""));
         }
 
         this.tables.put(tableImpl.getName().replace(".txt",""), tableImpl);
@@ -84,7 +84,7 @@ public class DatabaseImpl implements interfaces.Database {
     public void closeTable(String fileName) {
         if(!this.tables.containsKey(fileName)){
 
-            throw new DomainException("TableImpl " + fileName.replace(".txt","") + " is not loaded. ");
+            throw new DomainException("Table " + fileName.replace(".txt","") + " is not loaded. ");
         } else {
 
             this.tables.remove(fileName);

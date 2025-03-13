@@ -29,7 +29,7 @@ public class TextFileManager implements FileManage {
 
             return new TableImpl(fileName);
         }
-        TableImpl tableImpl = new TableImpl(fileName);
+        Table tableImpl = new TableImpl(fileName);
 
         String[] columnPair = rows.get(0).split(",");
         if (rows.size() == 1) {
