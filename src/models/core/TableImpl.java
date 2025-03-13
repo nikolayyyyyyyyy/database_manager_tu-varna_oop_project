@@ -19,6 +19,16 @@ public class TableImpl implements Table {
     }
 
     @Override
+    public List<Row> getRows() {
+        return this.rows;
+    }
+
+    @Override
+    public Set<Column> getColumns() {
+        return Set.of();
+    }
+
+    @Override
     public String getName() {
         return name;
     }

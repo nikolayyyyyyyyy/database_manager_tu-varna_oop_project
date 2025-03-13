@@ -1,10 +1,12 @@
 package interfaces;
 import models.core.ColumnType;
+
+import java.util.List;
 import java.util.Set;
 
 public interface Table {
 
-    Set<Row> getRows();
+    List<Row> getRows();
     Set<Column> getColumns();
     String getName();
     String printColumnTypes();
