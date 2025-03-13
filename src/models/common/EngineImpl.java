@@ -1,4 +1,5 @@
 package models.common;
+import exception.DomainException;
 import interfaces.DatabaseManager;
 import interfaces.Engine;
 import models.core.ColumnType;
@@ -91,23 +92,27 @@ public class EngineImpl implements Engine {
                         update(arguments[1],
                                 Integer.parseInt(arguments[2]),
                                 arguments[3],
-                                Integer.parseInt(arguments[5]),
-                                arguments[6]);
+                                Integer.parseInt(arguments[4]),
+                                arguments[5]);
                         break;
                     case "innerjoin":
 
                         innerJoin(arguments[2], Integer.parseInt(arguments[1]), arguments[4], Integer.parseInt(arguments[1]));
                         break;
+                    case "exit":
+                        System.exit(0);
+                        break;
                     default:
 
                         System.out.println("Invalid command");
                         break;
-                    case "exit":
-                        System.exit(0);
-                        break;
                 }
-            }catch (IOException e){
+            }catch (DomainException domainException){
 
+                System.out.println(domainException.getMessage());
+            } catch (IOException e) {
+
+                System.out.println("File exception.");
             }
         }
     }

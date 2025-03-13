@@ -15,10 +15,11 @@ public class Database implements DatabaseManager {
     public Database() {
         this.tables = new LinkedHashMap<>();
         this.fileManage = new TextFileManager();
-        this.help = Map.of("open <file>", "opens the file",
-                "close", "closes the currently opened file",
-                "save", "saves the currently opened file",
-                "saveas <file>", "saves the currently opened file in the file",
+
+        this.help = Map.of("open <file>", "opens the given file",
+                "close <file>", "closes the given file",
+                "save <file>", "saves the given file",
+                "saveas <file>", "saves file in new file",
                 "help","prints this information",
                 "exit","exists the program");
     }
@@ -83,7 +84,7 @@ public class Database implements DatabaseManager {
     public void closeTable(String fileName) {
         if(!this.tables.containsKey(fileName)){
 
-            throw new DomainException("Table %s is not loaded. " + fileName.replace(".txt",""));
+            throw new DomainException("Table " + fileName.replace(".txt","") + " is not loaded. ");
         } else {
 
             this.tables.remove(fileName);

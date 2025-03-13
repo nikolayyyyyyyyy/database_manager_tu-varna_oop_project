@@ -2,12 +2,8 @@ package models.common;
 import interfaces.ColumnManager;
 import interfaces.FileManage;
 import interfaces.RowManager;
-import models.core.Column;
 import models.core.ColumnType;
-import models.core.Row;
 import models.core.Table;
-
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,9 +29,8 @@ public class TextFileManager implements FileManage {
         }
         Table table = new Table(fileName);
 
+        String[] columnPair = rows.get(0).split(",");
         if (rows.size() == 1) {
-
-            String[] columnPair = rows.get(0).split(",");
 
             for (String pair :
                     columnPair) {
@@ -43,7 +38,6 @@ public class TextFileManager implements FileManage {
                 table.addColumn(ColumnType.valueOf(nameTypeOfColumn[0]),nameTypeOfColumn[1]);
             }
         } else {
-            String[] columnPair = rows.get(0).split(",");
 
             for (String pair :
                     columnPair) {
@@ -68,6 +62,11 @@ public class TextFileManager implements FileManage {
 
     @Override
     public void writeFile(Path baseDirectory,Table table) throws IOException {
+        if (!BaseFileValidator.isFileExist(table.getName())) {
+
+            Files.createFile(baseDirectory.resolve(table.getName()));
+        }
+
         if(!table.getColumns().isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (ColumnManager column :
