@@ -1,7 +1,0 @@
-STRING-model,STRING-brand,INTEGER-hp,
-audi a3 140
-audi a5 220
-audi a7 300
-audi a8 330
-bmw m3 150
-bmw m6 400
