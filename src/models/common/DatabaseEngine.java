@@ -49,8 +49,7 @@ public class DatabaseEngine implements Engine {
         }
     }
 
-    @Override
-    public void initCommands(Map<String, Command> commands) {
+    private void initCommands(Map<String, Command> commands) {
         commands.put("addcolumn", new AddColumnCommand(this.database));
         commands.put("close", new CloseCommand(this.database));
         commands.put("count", new CountCommand(this.database));
