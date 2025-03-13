@@ -1,15 +1,15 @@
 package models.command;
 
 import interfaces.Command;
-import interfaces.DatabaseManager;
+import interfaces.Database;
 
 import java.io.IOException;
 
 public class SaveAsCommand implements Command {
-    private final DatabaseManager databaseManager;
+    private final Database database;
 
-    public SaveAsCommand(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public SaveAsCommand(Database database) {
+        this.database = database;
     }
 
     @Override
@@ -18,7 +18,7 @@ public class SaveAsCommand implements Command {
         String newTableName = command[1];
 
         try {
-            this.databaseManager.saveTableAs(tableName, newTableName);
+            this.database.saveTableAs(tableName, newTableName);
         }catch (IOException e){
 
             System.out.printf("Error saving file %s",tableName);

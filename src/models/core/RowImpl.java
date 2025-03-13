@@ -1,12 +1,11 @@
 package models.core;
-import interfaces.RowManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Row implements RowManager {
+public class RowImpl implements interfaces.Row {
     private final List<String> records;
 
-    public Row(){
+    public RowImpl(){
         this.records = new ArrayList<>();
     }
 

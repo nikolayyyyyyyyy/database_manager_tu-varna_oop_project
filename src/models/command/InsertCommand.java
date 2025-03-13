@@ -1,14 +1,14 @@
 package models.command;
 import interfaces.Command;
-import interfaces.DatabaseManager;
-import models.core.Table;
+import interfaces.Database;
+import models.core.TableImpl;
 import java.util.Arrays;
 
 public class InsertCommand implements Command {
-    private final DatabaseManager databaseManager;
+    private final Database database;
 
-    public InsertCommand(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public InsertCommand(Database database) {
+        this.database = database;
     }
 
     @Override
@@ -16,8 +16,8 @@ public class InsertCommand implements Command {
         String tableName = command[0];
         String[] values = Arrays.stream(command).skip(1).toArray(String[]::new);
 
-        Table table = this.databaseManager.getTable(tableName);
+        TableImpl tableImpl = this.database.getTable(tableName);
 
-        table.addRow(values);
+        tableImpl.addRow(values);
     }
 }

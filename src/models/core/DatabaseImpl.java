@@ -1,18 +1,17 @@
 package models.core;
 import exception.DomainException;
-import interfaces.DatabaseManager;
 import interfaces.FileManage;
 import models.common.BaseFileValidator;
 import models.common.TextFileManager;
 import java.io.IOException;
 import java.util.*;
 
-public class Database implements DatabaseManager {
-    private final Map<String,Table> tables;
+public class DatabaseImpl implements interfaces.Database {
+    private final Map<String, TableImpl> tables;
     private final Map<String,String> help;
     private final FileManage fileManage;
 
-    public Database() {
+    public DatabaseImpl() {
         this.tables = new LinkedHashMap<>();
         this.fileManage = new TextFileManager();
 
@@ -44,10 +43,10 @@ public class Database implements DatabaseManager {
     }
 
     @Override
-    public Table getTable(String name) {
+    public TableImpl getTable(String name) {
         if(!this.tables.containsKey(name)) {
 
-            throw new DomainException("Table with %s is not loaded " + name);
+            throw new DomainException("TableImpl with %s is not loaded " + name);
         }
 
         return this.tables.get(name);
@@ -55,15 +54,15 @@ public class Database implements DatabaseManager {
 
     @Override
     public void openTable(String fileName) throws IOException {
-        Table table = fileManage
+        TableImpl tableImpl = fileManage
                 .readFile(BaseFileValidator.getBase(), fileName);
 
-        if (this.tables.containsKey(table.getName())) {
+        if (this.tables.containsKey(tableImpl.getName())) {
 
-            throw new DomainException("Table %s is already opened. " + fileName.replace(".txt",""));
+            throw new DomainException("TableImpl %s is already opened. " + fileName.replace(".txt",""));
         }
 
-        this.tables.put(table.getName().replace(".txt",""), table);
+        this.tables.put(tableImpl.getName().replace(".txt",""), tableImpl);
     }
 
     @Override
@@ -84,7 +83,7 @@ public class Database implements DatabaseManager {
     public void closeTable(String fileName) {
         if(!this.tables.containsKey(fileName)){
 
-            throw new DomainException("Table " + fileName.replace(".txt","") + " is not loaded. ");
+            throw new DomainException("TableImpl " + fileName.replace(".txt","") + " is not loaded. ");
         } else {
 
             this.tables.remove(fileName);
@@ -107,10 +106,10 @@ public class Database implements DatabaseManager {
 
             throw new DomainException("Name is already existing.");
         }
-        Table table = this.tables.get(oldFileName);
+        TableImpl tableImpl = this.tables.get(oldFileName);
 
-        table.rename(newFileName);
-        this.fileManage.writeFile(BaseFileValidator.getBase(), table);
+        tableImpl.rename(newFileName);
+        this.fileManage.writeFile(BaseFileValidator.getBase(), tableImpl);
         this.closeTable(oldFileName);
     }
 

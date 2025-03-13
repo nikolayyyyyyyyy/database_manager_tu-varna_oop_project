@@ -1,20 +1,20 @@
 package models.core;
 import exception.DomainException;
-import interfaces.ColumnManager;
-import interfaces.RowManager;
-import interfaces.TableManager;
+import interfaces.Column;
+import interfaces.Row;
+import interfaces.Table;
 import models.common.BaseFileValidator;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Table implements TableManager {
+public class TableImpl implements Table {
     private String name;
-    private final Set<Column> columns;
-    private final List<RowManager> rows;
+    private final Set<ColumnImpl> columnImpls;
+    private final List<Row> rows;
 
-    public Table(String name) {
+    public TableImpl(String name) {
         this.name = name;
-        this.columns = new LinkedHashSet<>();
+        this.columnImpls = new LinkedHashSet<>();
         this.rows = new ArrayList<>();
     }
 
@@ -22,24 +22,24 @@ public class Table implements TableManager {
         return name;
     }
 
-    public Set<Column> getColumns() {
-        return columns;
+    public Set<ColumnImpl> getColumns() {
+        return columnImpls;
     }
 
-    public List<RowManager> getRows() {
+    public List<Row> getRows() {
         return rows;
     }
 
     @Override
     public String printColumnTypes() {
-        if(this.columns.isEmpty()){
+        if(this.columnImpls.isEmpty()){
 
-            return String.format("Table %s has no columns.",this.name);
+            return String.format("TableImpl %s has no columnImpls.",this.name);
         }
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (ColumnManager column :
-                this.columns) {
+        for (Column column :
+                this.columnImpls) {
             stringBuilder.append(column.print()).append(" ");
         }
 
@@ -50,10 +50,10 @@ public class Table implements TableManager {
     public void printRows() {
         if(this.rows.isEmpty()){
 
-            System.out.printf("Table %s has no records.", this.name);
+            System.out.printf("TableImpl %s has no records.", this.name);
         }
 
-        for (RowManager row :
+        for (Row row :
                 this.rows) {
             System.out.println(row.print());
         }
@@ -61,12 +61,12 @@ public class Table implements TableManager {
 
     @Override
     public String selectAllRowsContain(int columnIndex,String value) {
-        if(columnIndex > this.columns.size()){
+        if(columnIndex > this.columnImpls.size()){
 
             throw new DomainException("Index out of range!Try again ;)");
         }
 
-        List<RowManager> selectedRows = this.rows.stream()
+        List<Row> selectedRows = this.rows.stream()
                 .filter(r -> r.getValueAt(columnIndex).equals(value))
                 .collect(Collectors.toList());
 
@@ -76,7 +76,7 @@ public class Table implements TableManager {
         }
         StringBuilder sb = new StringBuilder();
 
-        for (RowManager row :
+        for (Row row :
                 selectedRows) {
             sb.append(row.print()).append("\n");
         }
@@ -86,15 +86,15 @@ public class Table implements TableManager {
 
     @Override
     public void addColumn(ColumnType type,String name) {
-        Column column = new Column(name,type);
-        if (this.columns.contains(column)){
+        ColumnImpl columnImpl = new ColumnImpl(name,type);
+        if (this.columnImpls.contains(columnImpl)){
 
-            throw new DomainException("Column already exist");
+            throw new DomainException("ColumnImpl already exist");
         }
-        this.columns.add(column);
+        this.columnImpls.add(columnImpl);
 
         if(!rows.isEmpty()) {
-            for (RowManager row :
+            for (Row row :
                     this.rows) {
                 row.addValue("Null");
             }
@@ -103,12 +103,12 @@ public class Table implements TableManager {
 
     @Override
     public String updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue, String newValue) {
-        if(index > this.columns.size() || targetIndex > this.columns.size()){
+        if(index > this.columnImpls.size() || targetIndex > this.columnImpls.size()){
 
             throw new DomainException("Index out of range exception");
         }
 
-        List<RowManager> rows = this.rows
+        List<Row> rows = this.rows
                 .stream().filter(r -> r.getValueAt(index).equals(oldValue))
                 .collect(Collectors.toList());
 
@@ -116,7 +116,7 @@ public class Table implements TableManager {
             return "0 rows affected.";
         }
 
-        for (RowManager row :
+        for (Row row :
                 rows) {
             row.updateValueAt(targetIndex,newValue);
         }
@@ -127,7 +127,7 @@ public class Table implements TableManager {
     public String deleteTableWhereRowContainsAt(int index, String value) {
         if(this.rows.stream().anyMatch(r -> r.getValueAt(index).equals(value))){
 
-            List<RowManager> roesToDelete = this.rows.stream()
+            List<Row> roesToDelete = this.rows.stream()
                     .filter(r -> r.getValueAt(index).equals(value))
                     .collect(Collectors.toList());
 
@@ -140,12 +140,12 @@ public class Table implements TableManager {
 
     @Override
     public void addRow(String[] values) {
-        if(values.length > this.columns.size()){
+        if(values.length > this.columnImpls.size()){
 
             throw new DomainException("Too many values for the column count.");
         } else {
 
-            Row row = new Row();
+            RowImpl row = new RowImpl();
             for (String value :
                     values) {
                 row.addValue(value);

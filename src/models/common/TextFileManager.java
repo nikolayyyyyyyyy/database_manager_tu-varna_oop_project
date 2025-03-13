@@ -1,9 +1,10 @@
 package models.common;
-import interfaces.ColumnManager;
+import interfaces.Column;
 import interfaces.FileManage;
-import interfaces.RowManager;
+import interfaces.Row;
 import models.core.ColumnType;
-import models.core.Table;
+import models.core.TableImpl;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,21 +14,21 @@ import java.util.List;
 public class TextFileManager implements FileManage {
 
     @Override
-    public Table readFile(Path basePath, String fileName) throws IOException {
+    public TableImpl readFile(Path basePath, String fileName) throws IOException {
         if (!BaseFileValidator.isFileExist(fileName)) {
 
             Files.createFile(basePath.resolve(fileName));
 
-            return new Table(fileName);
+            return new TableImpl(fileName);
         }
 
         List<String> rows = Files.readAllLines(basePath.resolve(fileName));
 
         if (rows.isEmpty()) {
 
-            return new Table(fileName);
+            return new TableImpl(fileName);
         }
-        Table table = new Table(fileName);
+        TableImpl tableImpl = new TableImpl(fileName);
 
         String[] columnPair = rows.get(0).split(",");
         if (rows.size() == 1) {
@@ -35,14 +36,14 @@ public class TextFileManager implements FileManage {
             for (String pair :
                     columnPair) {
                 String[] nameTypeOfColumn = pair.split("-");
-                table.addColumn(ColumnType.valueOf(nameTypeOfColumn[0]),nameTypeOfColumn[1]);
+                tableImpl.addColumn(ColumnType.valueOf(nameTypeOfColumn[0]),nameTypeOfColumn[1]);
             }
         } else {
 
             for (String pair :
                     columnPair) {
                 String[] nameTypeOfColumn = pair.split("-");
-                table.addColumn(ColumnType.valueOf(nameTypeOfColumn[0]), nameTypeOfColumn[1]);
+                tableImpl.addColumn(ColumnType.valueOf(nameTypeOfColumn[0]), nameTypeOfColumn[1]);
             }
 
             String[] records = rows
@@ -54,33 +55,33 @@ public class TextFileManager implements FileManage {
                     records) {
                 String[] values = record.split(" ");
 
-                table.addRow(values);
+                tableImpl.addRow(values);
             }
         }
-        return table;
+        return tableImpl;
     }
 
     @Override
-    public void writeFile(Path baseDirectory,Table table) throws IOException {
-        if (!BaseFileValidator.isFileExist(table.getName())) {
+    public void writeFile(Path baseDirectory, TableImpl tableImpl) throws IOException {
+        if (!BaseFileValidator.isFileExist(tableImpl.getName())) {
 
-            Files.createFile(baseDirectory.resolve(table.getName()));
+            Files.createFile(baseDirectory.resolve(tableImpl.getName()));
         }
 
-        if(!table.getColumns().isEmpty()) {
+        if(!tableImpl.getColumns().isEmpty()) {
             StringBuilder sb = new StringBuilder();
-            for (ColumnManager column :
-                    table.getColumns()) {
+            for (Column column :
+                    tableImpl.getColumns()) {
 
                 sb.append(column.getColumnType()).append("-").append(column.getName()).append(",");
             }
 
-            Files.writeString(baseDirectory.resolve(table.getName()), sb.toString() + "\n", StandardOpenOption.APPEND);
+            Files.writeString(baseDirectory.resolve(tableImpl.getName()), sb.toString() + "\n", StandardOpenOption.APPEND);
 
 
-            for (RowManager row :
-                    table.getRows()) {
-                Files.writeString(baseDirectory.resolve(table.getName()), String.join(" ", row.print()) + "\n", StandardOpenOption.APPEND);
+            for (Row row :
+                    tableImpl.getRows()) {
+                Files.writeString(baseDirectory.resolve(tableImpl.getName()), String.join(" ", row.print()) + "\n", StandardOpenOption.APPEND);
             }
         }
     }

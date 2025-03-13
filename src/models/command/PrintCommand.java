@@ -1,20 +1,20 @@
 package models.command;
 
 import interfaces.Command;
-import interfaces.DatabaseManager;
+import interfaces.Database;
 
 public class PrintCommand implements Command {
-    private final DatabaseManager databaseManager;
+    private final Database database;
 
-    public PrintCommand(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public PrintCommand(Database database) {
+        this.database = database;
     }
 
     @Override
     public void execute(String... command) {
         String tableName = command[0];
 
-        this.databaseManager
+        this.database
                 .getTable(tableName)
                 .printRows();
     }

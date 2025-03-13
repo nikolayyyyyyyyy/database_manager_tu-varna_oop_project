@@ -1,12 +1,13 @@
 package models.core;
-import interfaces.ColumnManager;
+import interfaces.Column;
+
 import java.util.*;
 
-public class Column implements ColumnManager {
+public class ColumnImpl implements Column {
     private final String name;
     private final ColumnType type;
 
-    public Column(String name, ColumnType type){
+    public ColumnImpl(String name, ColumnType type){
         this.name = name;
         this.type = type;
     }
@@ -30,8 +31,8 @@ public class Column implements ColumnManager {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Column column = (Column) o;
-        return Objects.equals(name, column.name) && type == column.type;
+        ColumnImpl columnImpl = (ColumnImpl) o;
+        return Objects.equals(name, columnImpl.name) && type == columnImpl.type;
     }
 
     @Override

@@ -1,14 +1,14 @@
 package models.command;
 
 import interfaces.Command;
-import interfaces.DatabaseManager;
-import models.core.Table;
+import interfaces.Database;
+import models.core.TableImpl;
 
 public class UpdateCommand implements Command {
-    private final DatabaseManager databaseManager;
+    private final Database database;
 
-    public UpdateCommand(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public UpdateCommand(Database database) {
+        this.database = database;
     }
 
     @Override
@@ -19,9 +19,9 @@ public class UpdateCommand implements Command {
         int targetColumnIndex = Integer.parseInt(command[3]);
         String targetValue = command[4];
 
-        Table table = this.databaseManager.getTable(tableName);
+        TableImpl tableImpl = this.database.getTable(tableName);
 
-        System.out.println(table.updateRowValueAtIndexWhereContainsAt(columnIndex,
+        System.out.println(tableImpl.updateRowValueAtIndexWhereContainsAt(columnIndex,
                 targetColumnIndex,
                 searchedValue,
                 targetValue));

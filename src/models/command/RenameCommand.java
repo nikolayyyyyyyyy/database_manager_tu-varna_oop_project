@@ -1,14 +1,14 @@
 package models.command;
 
 import interfaces.Command;
-import interfaces.DatabaseManager;
-import models.core.Table;
+import interfaces.Database;
+import models.core.TableImpl;
 
 public class RenameCommand implements Command {
-    private final DatabaseManager databaseManager;
+    private final Database database;
 
-    public RenameCommand(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public RenameCommand(Database database) {
+        this.database = database;
     }
 
     @Override
@@ -16,7 +16,7 @@ public class RenameCommand implements Command {
         String tableName = command[0];
         String newTableName = command[1];
 
-        Table table = this.databaseManager.getTable(tableName);
-        table.rename(newTableName);
+        TableImpl tableImpl = this.database.getTable(tableName);
+        tableImpl.rename(newTableName);
     }
 }

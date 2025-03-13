@@ -1,10 +1,10 @@
 package interfaces;
 
-import models.core.Table;
+import models.core.TableImpl;
 
 import java.io.IOException;
 
-public interface DatabaseManager {
+public interface Database {
     void openTable(String fileName) throws IOException;
     String printTables();
     void closeTable(String fileName);
@@ -12,5 +12,5 @@ public interface DatabaseManager {
     void saveTableAs(String oldFileName,String newFileName) throws IOException;
     String innerJoinTables(String firstTable,String firstValue,String secondTable,String secondValue);
     String printHelp();
-    Table getTable(String name);
+    TableImpl getTable(String name);
 }

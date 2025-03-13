@@ -1,18 +1,18 @@
 package models.command;
 
 import interfaces.Command;
-import interfaces.DatabaseManager;
+import interfaces.Database;
 
 public class HelpCommand implements Command {
-    private final DatabaseManager databaseManager;
+    private final Database database;
 
-    public HelpCommand(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public HelpCommand(Database database) {
+        this.database = database;
     }
 
     @Override
     public void execute(String... command) {
 
-        System.out.println(this.databaseManager.printHelp());
+        System.out.println(this.database.printHelp());
     }
 }

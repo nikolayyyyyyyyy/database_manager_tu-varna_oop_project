@@ -1,18 +1,18 @@
 package models.command;
 
 import interfaces.Command;
-import interfaces.DatabaseManager;
+import interfaces.Database;
 
 public class ShowTableCommand implements Command {
-    private final DatabaseManager databaseManager;
+    private final Database database;
 
-    public ShowTableCommand(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public ShowTableCommand(Database database) {
+        this.database = database;
     }
 
     @Override
     public void execute(String... command) {
 
-        System.out.println(this.databaseManager.printTables());
+        System.out.println(this.database.printTables());
     }
 }

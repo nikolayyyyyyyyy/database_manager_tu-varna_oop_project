@@ -2,7 +2,7 @@ package interfaces;
 
 import models.core.ColumnType;
 
-public interface TableManager {
+public interface Table {
 
     String printColumnTypes();
     void printRows();

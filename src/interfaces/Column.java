@@ -2,7 +2,7 @@ package interfaces;
 
 import models.core.ColumnType;
 
-public interface ColumnManager {
+public interface Column {
 
     public String print();
     public String getName();

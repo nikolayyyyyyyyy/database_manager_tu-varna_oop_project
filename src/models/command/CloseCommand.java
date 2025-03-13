@@ -1,19 +1,19 @@
 package models.command;
 
 import interfaces.Command;
-import interfaces.DatabaseManager;
+import interfaces.Database;
 
 public class CloseCommand implements Command {
-    private final DatabaseManager databaseManager;
+    private final Database database;
 
-    public CloseCommand(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public CloseCommand(Database database) {
+        this.database = database;
     }
 
     @Override
     public void execute(String... command) {
         String tableName = command[0];
-        this.databaseManager.closeTable(tableName);
+        this.database.closeTable(tableName);
 
     }
 }

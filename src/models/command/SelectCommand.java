@@ -1,14 +1,14 @@
 package models.command;
 
 import interfaces.Command;
-import interfaces.DatabaseManager;
-import models.core.Table;
+import interfaces.Database;
+import models.core.TableImpl;
 
 public class SelectCommand implements Command {
-    private final DatabaseManager databaseManager;
+    private final Database database;
 
-    public SelectCommand(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public SelectCommand(Database database) {
+        this.database = database;
     }
 
     @Override
@@ -16,8 +16,8 @@ public class SelectCommand implements Command {
         String tableName = command[0];
         int columnIndex = Integer.parseInt(command[1]);
         String searchedValue = command[2];
-        Table table = databaseManager.getTable(tableName);
+        TableImpl tableImpl = database.getTable(tableName);
 
-        System.out.println(table.selectAllRowsContain(columnIndex,searchedValue));
+        System.out.println(tableImpl.selectAllRowsContain(columnIndex,searchedValue));
     }
 }

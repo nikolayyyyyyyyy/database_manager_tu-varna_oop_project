@@ -1,6 +1,6 @@
 package interfaces;
 
-public interface RowManager {
+public interface Row {
 
     public void addValue(String value);
     public String getValueAt(int index);

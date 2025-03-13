@@ -1,14 +1,14 @@
 package models.command;
 import interfaces.Command;
-import interfaces.DatabaseManager;
+import interfaces.Database;
 import models.core.ColumnType;
-import models.core.Table;
+import models.core.TableImpl;
 
 public class AddColumnCommand implements Command {
-    private final DatabaseManager databaseManager;
+    private final Database database;
 
-    public AddColumnCommand(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public AddColumnCommand(Database database) {
+        this.database = database;
     }
 
     @Override
@@ -17,9 +17,9 @@ public class AddColumnCommand implements Command {
         String columnName = command[1];
         ColumnType columnType = ColumnType.valueOf(command[2]);
 
-        Table table = this.databaseManager.getTable(tableName);
+        TableImpl tableImpl = this.database.getTable(tableName);
 
-        table.addColumn(columnType,columnName);
+        tableImpl.addColumn(columnType,columnName);
         System.out.println("Added column -> ".concat(columnName));
     }
 }

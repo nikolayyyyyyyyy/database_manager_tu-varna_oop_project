@@ -1,14 +1,14 @@
 package models.command;
 
 import interfaces.Command;
-import interfaces.DatabaseManager;
-import models.core.Table;
+import interfaces.Database;
+import models.core.TableImpl;
 
 public class DeleteCommand implements Command {
-    private final DatabaseManager databaseManager;
+    private final Database database;
 
-    public DeleteCommand(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public DeleteCommand(Database database) {
+        this.database = database;
     }
 
     @Override
@@ -17,7 +17,7 @@ public class DeleteCommand implements Command {
         int columnIndex = Integer.parseInt(command[1]);
         String searchedValue = command[2];
 
-        Table table = this.databaseManager.getTable(tableName);
-        System.out.println(table.deleteTableWhereRowContainsAt(columnIndex,searchedValue));
+        TableImpl tableImpl = this.database.getTable(tableName);
+        System.out.println(tableImpl.deleteTableWhereRowContainsAt(columnIndex,searchedValue));
     }
 }
