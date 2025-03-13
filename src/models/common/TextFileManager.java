@@ -1,10 +1,13 @@
 package models.common;
+import interfaces.ColumnManager;
 import interfaces.FileManage;
 import interfaces.RowManager;
 import models.core.Column;
 import models.core.ColumnType;
 import models.core.Row;
 import models.core.Table;
+
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,7 +40,7 @@ public class TextFileManager implements FileManage {
             for (String pair :
                     columnPair) {
                 String[] nameTypeOfColumn = pair.split("-");
-                table.addColumn(nameTypeOfColumn[0], ColumnType.valueOf(nameTypeOfColumn[1]));
+                table.addColumn(ColumnType.valueOf(nameTypeOfColumn[0]),nameTypeOfColumn[1]);
             }
         } else {
             String[] columnPair = rows.get(0).split(",");
@@ -45,7 +48,7 @@ public class TextFileManager implements FileManage {
             for (String pair :
                     columnPair) {
                 String[] nameTypeOfColumn = pair.split("-");
-                table.addColumn(nameTypeOfColumn[1], ColumnType.valueOf(nameTypeOfColumn[0]));
+                table.addColumn(ColumnType.valueOf(nameTypeOfColumn[0]), nameTypeOfColumn[1]);
             }
 
             String[] records = rows
@@ -57,35 +60,29 @@ public class TextFileManager implements FileManage {
                     records) {
                 String[] values = record.split(" ");
 
-                Row row = new Row();
-
-                for (String value :
-                        values) {
-                    row.addValue(value);
-                }
-
-                table.getRows().add(row);
+                table.addRow(values);
             }
         }
-
         return table;
     }
 
     @Override
     public void writeFile(Path baseDirectory,Table table) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        for (Column columns :
-                table.getColumns()) {
-            sb.append(columns.getType()).append("-").append(columns.getName()).append(",");
-        }
+        if(!table.getColumns().isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ColumnManager column :
+                    table.getColumns()) {
 
-        if(sb.length() != 0) {
+                sb.append(column.getColumnType()).append("-").append(column.getName()).append(",");
+            }
+
             Files.writeString(baseDirectory.resolve(table.getName()), sb.toString() + "\n", StandardOpenOption.APPEND);
-        }
 
-        for (RowManager row :
-                table.getRows()) {
-            Files.writeString(baseDirectory.resolve(table.getName()), String.join(" ", row.print()) + "\n", StandardOpenOption.APPEND);
+
+            for (RowManager row :
+                    table.getRows()) {
+                Files.writeString(baseDirectory.resolve(table.getName()), String.join(" ", row.print()) + "\n", StandardOpenOption.APPEND);
+            }
         }
     }
 }

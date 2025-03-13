@@ -1,8 +1,8 @@
 package models.core;
+import interfaces.ColumnManager;
+import java.util.*;
 
-import java.util.Objects;
-
-public class Column {
+public class Column implements ColumnManager {
     private final String name;
     private final ColumnType type;
 
@@ -11,12 +11,19 @@ public class Column {
         this.type = type;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public String print() {
+        return String.format("Name: %s Type: %s",this.name,this.type);
     }
 
-    public ColumnType getType() {
-        return type;
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public ColumnType getColumnType() {
+        return this.type;
     }
 
     @Override

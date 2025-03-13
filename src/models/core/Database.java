@@ -46,7 +46,7 @@ public class Database implements DatabaseManager {
     public Table getTable(String name) {
         if(!this.tables.containsKey(name)) {
 
-            throw new DomainException("Table with %s is not loaded".formatted(name));
+            throw new DomainException("Table with %s is not loaded " + name);
         }
 
         return this.tables.get(name);
@@ -59,7 +59,7 @@ public class Database implements DatabaseManager {
 
         if (this.tables.containsKey(table.getName())) {
 
-            throw new DomainException("Table %s is already opened.".formatted(fileName).replace(".txt",""));
+            throw new DomainException("Table %s is already opened. " + fileName.replace(".txt",""));
         }
 
         this.tables.put(table.getName().replace(".txt",""), table);
@@ -83,7 +83,7 @@ public class Database implements DatabaseManager {
     public void closeTable(String fileName) {
         if(!this.tables.containsKey(fileName)){
 
-            throw new DomainException("Table %s is not loaded.".formatted(fileName).replace(".txt",""));
+            throw new DomainException("Table %s is not loaded. " + fileName.replace(".txt",""));
         } else {
 
             this.tables.remove(fileName);
@@ -96,7 +96,7 @@ public class Database implements DatabaseManager {
 
         this.fileManage.writeFile(BaseFileValidator.getBase(), this.tables.get(tableName));
 
-        System.out.println("Saved table ->".concat(tableName));
+        System.out.println("Saved table -> ".concat(tableName));
         this.closeTable(tableName);
     }
 

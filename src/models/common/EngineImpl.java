@@ -102,6 +102,9 @@ public class EngineImpl implements Engine {
 
                         System.out.println("Invalid command");
                         break;
+                    case "exit":
+                        System.exit(0);
+                        break;
                 }
             }catch (IOException e){
 
@@ -115,10 +118,10 @@ public class EngineImpl implements Engine {
     private void update(String tableName, int columnIndex, String searchedValue, int targetColumnIndex, String targetValue) {
         Table table = this.databaseManager.getTable(tableName);
 
-        table.updateRowValueAtIndexWhereContainsAt(columnIndex,
+        System.out.println(table.updateRowValueAtIndexWhereContainsAt(columnIndex,
                 targetColumnIndex,
                 searchedValue,
-                targetValue);
+                targetValue));
 
     }
 
@@ -138,9 +141,9 @@ public class EngineImpl implements Engine {
     }
 
     private void print(String tableName) {
-        System.out.println(this.databaseManager
+        this.databaseManager
                 .getTable(tableName)
-                .printRows());
+                .printRows();
     }
 
     private void insert(String tableName, String[] values) {
@@ -163,7 +166,7 @@ public class EngineImpl implements Engine {
     private void delete(String tableName, int columnIndex, String searchedValue) {
 
         Table table = this.databaseManager.getTable(tableName);
-        table.deleteTableWhereRowContainsAt(columnIndex,searchedValue);
+        System.out.println(table.deleteTableWhereRowContainsAt(columnIndex,searchedValue));
     }
 
     private void count(String tableName, int columnIndex, String searchedValue) {
@@ -175,8 +178,8 @@ public class EngineImpl implements Engine {
     private void addColumn(String tableName,String columnName,ColumnType columnType) {
         Table table = this.databaseManager.getTable(tableName);
 
-        table.addColumn(columnName,columnType);
-        System.out.println("Added column ->".concat(columnName));
+        table.addColumn(columnType,columnName);
+        System.out.println("Added column -> ".concat(columnName));
     }
 
     private void saveTableAs(String tableName, String newTableName) throws IOException {
@@ -195,6 +198,6 @@ public class EngineImpl implements Engine {
     private void openTableCommand(String tableName) throws IOException {
          this.databaseManager.openTable(tableName);
 
-         System.out.println("Opened table ->".concat(tableName));
+         System.out.println("Opened table -> ".concat(tableName));
     }
 }
