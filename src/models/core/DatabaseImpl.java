@@ -1,13 +1,14 @@
 package models.core;
 import exception.DomainException;
 import interfaces.FileManage;
+import interfaces.Table;
 import models.common.BaseFileValidator;
 import models.common.TextFileManager;
 import java.io.IOException;
 import java.util.*;
 
 public class DatabaseImpl implements interfaces.Database {
-    private final Map<String, TableImpl> tables;
+    private final Map<String, Table> tables;
     private final Map<String,String> help;
     private final FileManage fileManage;
 
@@ -43,7 +44,7 @@ public class DatabaseImpl implements interfaces.Database {
     }
 
     @Override
-    public TableImpl getTable(String name) {
+    public Table getTable(String name) {
         if(!this.tables.containsKey(name)) {
 
             throw new DomainException("TableImpl with %s is not loaded " + name);
@@ -54,7 +55,7 @@ public class DatabaseImpl implements interfaces.Database {
 
     @Override
     public void openTable(String fileName) throws IOException {
-        TableImpl tableImpl = fileManage
+        Table tableImpl = fileManage
                 .readFile(BaseFileValidator.getBase(), fileName);
 
         if (this.tables.containsKey(tableImpl.getName())) {
@@ -106,7 +107,7 @@ public class DatabaseImpl implements interfaces.Database {
 
             throw new DomainException("Name is already existing.");
         }
-        TableImpl tableImpl = this.tables.get(oldFileName);
+        Table tableImpl = this.tables.get(oldFileName);
 
         tableImpl.rename(newFileName);
         this.fileManage.writeFile(BaseFileValidator.getBase(), tableImpl);

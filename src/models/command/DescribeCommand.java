@@ -2,7 +2,7 @@ package models.command;
 
 import interfaces.Command;
 import interfaces.Database;
-import models.core.TableImpl;
+import interfaces.Table;
 
 public class DescribeCommand implements Command {
     private final Database database;
@@ -14,7 +14,7 @@ public class DescribeCommand implements Command {
     @Override
     public void execute(String... command) {
         String tableName = command[0];
-        TableImpl tableImpl = this.database.getTable(tableName);
+        Table tableImpl = this.database.getTable(tableName);
 
         System.out.println(tableImpl.printColumnTypes());
     }

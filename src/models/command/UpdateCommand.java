@@ -1,8 +1,7 @@
 package models.command;
-
 import interfaces.Command;
 import interfaces.Database;
-import models.core.TableImpl;
+import interfaces.Table;
 
 public class UpdateCommand implements Command {
     private final Database database;
@@ -19,7 +18,7 @@ public class UpdateCommand implements Command {
         int targetColumnIndex = Integer.parseInt(command[3]);
         String targetValue = command[4];
 
-        TableImpl tableImpl = this.database.getTable(tableName);
+        Table tableImpl = this.database.getTable(tableName);
 
         System.out.println(tableImpl.updateRowValueAtIndexWhereContainsAt(columnIndex,
                 targetColumnIndex,

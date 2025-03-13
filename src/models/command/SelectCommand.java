@@ -2,7 +2,7 @@ package models.command;
 
 import interfaces.Command;
 import interfaces.Database;
-import models.core.TableImpl;
+import interfaces.Table;
 
 public class SelectCommand implements Command {
     private final Database database;
@@ -16,7 +16,7 @@ public class SelectCommand implements Command {
         String tableName = command[0];
         int columnIndex = Integer.parseInt(command[1]);
         String searchedValue = command[2];
-        TableImpl tableImpl = database.getTable(tableName);
+        Table tableImpl = database.getTable(tableName);
 
         System.out.println(tableImpl.selectAllRowsContain(columnIndex,searchedValue));
     }

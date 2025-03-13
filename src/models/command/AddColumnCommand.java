@@ -1,8 +1,8 @@
 package models.command;
 import interfaces.Command;
 import interfaces.Database;
+import interfaces.Table;
 import models.core.ColumnType;
-import models.core.TableImpl;
 
 public class AddColumnCommand implements Command {
     private final Database database;
@@ -17,7 +17,7 @@ public class AddColumnCommand implements Command {
         String columnName = command[1];
         ColumnType columnType = ColumnType.valueOf(command[2]);
 
-        TableImpl tableImpl = this.database.getTable(tableName);
+        Table tableImpl = this.database.getTable(tableName);
 
         tableImpl.addColumn(columnType,columnName);
         System.out.println("Added column -> ".concat(columnName));

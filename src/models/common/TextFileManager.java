@@ -2,6 +2,7 @@ package models.common;
 import interfaces.Column;
 import interfaces.FileManage;
 import interfaces.Row;
+import interfaces.Table;
 import models.core.ColumnType;
 import models.core.TableImpl;
 
@@ -14,7 +15,7 @@ import java.util.List;
 public class TextFileManager implements FileManage {
 
     @Override
-    public TableImpl readFile(Path basePath, String fileName) throws IOException {
+    public Table readFile(Path basePath, String fileName) throws IOException {
         if (!BaseFileValidator.isFileExist(fileName)) {
 
             Files.createFile(basePath.resolve(fileName));
@@ -62,7 +63,7 @@ public class TextFileManager implements FileManage {
     }
 
     @Override
-    public void writeFile(Path baseDirectory, TableImpl tableImpl) throws IOException {
+    public void writeFile(Path baseDirectory, Table tableImpl) throws IOException {
         if (!BaseFileValidator.isFileExist(tableImpl.getName())) {
 
             Files.createFile(baseDirectory.resolve(tableImpl.getName()));

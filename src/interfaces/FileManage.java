@@ -5,6 +5,6 @@ import java.nio.file.Path;
 
 public interface FileManage {
 
-    public TableImpl readFile(Path baseDirectory, String fileName) throws IOException;
-    public void writeFile(Path baseDirectory, TableImpl tableImpl) throws IOException;
+    public Table readFile(Path baseDirectory, String fileName) throws IOException;
+    public void writeFile(Path baseDirectory, Table tableImpl) throws IOException;
 }

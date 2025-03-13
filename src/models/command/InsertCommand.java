@@ -1,7 +1,7 @@
 package models.command;
 import interfaces.Command;
 import interfaces.Database;
-import models.core.TableImpl;
+import interfaces.Table;
 import java.util.Arrays;
 
 public class InsertCommand implements Command {
@@ -16,7 +16,7 @@ public class InsertCommand implements Command {
         String tableName = command[0];
         String[] values = Arrays.stream(command).skip(1).toArray(String[]::new);
 
-        TableImpl tableImpl = this.database.getTable(tableName);
+        Table tableImpl = this.database.getTable(tableName);
 
         tableImpl.addRow(values);
     }

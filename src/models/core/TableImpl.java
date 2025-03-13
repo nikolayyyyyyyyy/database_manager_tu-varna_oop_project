@@ -9,37 +9,30 @@ import java.util.stream.Collectors;
 
 public class TableImpl implements Table {
     private String name;
-    private final Set<ColumnImpl> columnImpls;
+    private final Set<Column> columns;
     private final List<Row> rows;
 
     public TableImpl(String name) {
         this.name = name;
-        this.columnImpls = new LinkedHashSet<>();
+        this.columns = new LinkedHashSet<>();
         this.rows = new ArrayList<>();
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
-    public Set<ColumnImpl> getColumns() {
-        return columnImpls;
-    }
-
-    public List<Row> getRows() {
-        return rows;
-    }
-
     @Override
     public String printColumnTypes() {
-        if(this.columnImpls.isEmpty()){
+        if(this.columns.isEmpty()){
 
             return String.format("TableImpl %s has no columnImpls.",this.name);
         }
         StringBuilder stringBuilder = new StringBuilder();
 
         for (Column column :
-                this.columnImpls) {
+                this.columns) {
             stringBuilder.append(column.print()).append(" ");
         }
 
@@ -61,7 +54,7 @@ public class TableImpl implements Table {
 
     @Override
     public String selectAllRowsContain(int columnIndex,String value) {
-        if(columnIndex > this.columnImpls.size()){
+        if(columnIndex > this.columns.size()){
 
             throw new DomainException("Index out of range!Try again ;)");
         }
@@ -87,11 +80,11 @@ public class TableImpl implements Table {
     @Override
     public void addColumn(ColumnType type,String name) {
         ColumnImpl columnImpl = new ColumnImpl(name,type);
-        if (this.columnImpls.contains(columnImpl)){
+        if (this.columns.contains(columnImpl)){
 
             throw new DomainException("ColumnImpl already exist");
         }
-        this.columnImpls.add(columnImpl);
+        this.columns.add(columnImpl);
 
         if(!rows.isEmpty()) {
             for (Row row :
@@ -103,7 +96,7 @@ public class TableImpl implements Table {
 
     @Override
     public String updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue, String newValue) {
-        if(index > this.columnImpls.size() || targetIndex > this.columnImpls.size()){
+        if(index > this.columns.size() || targetIndex > this.columns.size()){
 
             throw new DomainException("Index out of range exception");
         }
@@ -140,7 +133,7 @@ public class TableImpl implements Table {
 
     @Override
     public void addRow(String[] values) {
-        if(values.length > this.columnImpls.size()){
+        if(values.length > this.columns.size()){
 
             throw new DomainException("Too many values for the column count.");
         } else {

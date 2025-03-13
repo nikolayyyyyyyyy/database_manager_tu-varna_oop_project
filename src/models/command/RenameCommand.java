@@ -2,6 +2,7 @@ package models.command;
 
 import interfaces.Command;
 import interfaces.Database;
+import interfaces.Table;
 import models.core.TableImpl;
 
 public class RenameCommand implements Command {
@@ -16,7 +17,7 @@ public class RenameCommand implements Command {
         String tableName = command[0];
         String newTableName = command[1];
 
-        TableImpl tableImpl = this.database.getTable(tableName);
+        Table tableImpl = this.database.getTable(tableName);
         tableImpl.rename(newTableName);
     }
 }

@@ -1,8 +1,7 @@
 package models.command;
-
 import interfaces.Command;
 import interfaces.Database;
-import models.core.TableImpl;
+import interfaces.Table;
 
 public class CountCommand implements Command {
     private final Database database;
@@ -17,7 +16,7 @@ public class CountCommand implements Command {
         int columnIndex = Integer.parseInt(command[1]);
         String searchedValue = command[2];
 
-        TableImpl tableImpl = this.database.getTable(tableName);
+        Table tableImpl = this.database.getTable(tableName);
 
         System.out.println(tableImpl.getCountRowsContainAt(columnIndex,searchedValue));
     }
