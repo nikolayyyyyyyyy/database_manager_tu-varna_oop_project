@@ -1,4 +1,5 @@
 package models.common;
+import exception.DomainException;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Engine;
@@ -31,12 +32,17 @@ public class DatabaseEngine implements Engine {
             String[] arguments = input.split(" ");
 
             if(this.commands.containsKey(arguments[0])) {
-               command = this.commands.get(arguments[0]);
+                try {
+                    command = this.commands.get(arguments[0]);
 
-               command.execute(Arrays
-                       .stream(arguments)
-                       .skip(1)
-                       .toArray(String[]::new));
+                    command.execute(Arrays
+                            .stream(arguments)
+                            .skip(1)
+                            .toArray(String[]::new));
+                }catch (DomainException exception){
+
+                    System.out.println(exception.getMessage());
+                }
             } else {
 
                 System.out.println("Invalid command!");
