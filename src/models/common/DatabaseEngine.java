@@ -25,6 +25,7 @@ public class DatabaseEngine implements Engine {
         Command command;
 
         while(true){
+
             System.out.print("> ");
             String input = this.scanner.nextLine();
             String[] arguments = input.split(" ");
@@ -39,8 +40,8 @@ public class DatabaseEngine implements Engine {
             } else {
 
                 System.out.println("Invalid command!");
+                break;
             }
-
         }
     }
 

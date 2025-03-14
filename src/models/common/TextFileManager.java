@@ -72,7 +72,7 @@ public class TextFileManager implements FileManage {
                 sb.append(column.getColumnType()).append("-").append(column.getName()).append(",");
             }
 
-            Files.writeString(baseDirectory.resolve(tableImpl.getName()), sb.toString().trim() + "\n", StandardOpenOption.APPEND);
+            Files.writeString(baseDirectory.resolve(tableImpl.getName()), sb.toString().trim() + "\n", StandardOpenOption.CREATE);
 
 
             for (Row row :

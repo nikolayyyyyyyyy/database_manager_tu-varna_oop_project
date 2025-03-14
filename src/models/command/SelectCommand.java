@@ -13,9 +13,9 @@ public class SelectCommand implements Command {
 
     @Override
     public void execute(String... command) {
-        String tableName = command[0];
-        int columnIndex = Integer.parseInt(command[1]);
-        String searchedValue = command[2];
+        String tableName = command[2];
+        int columnIndex = Integer.parseInt(command[0]);
+        String searchedValue = command[1];
         Table tableImpl = database.getTable(tableName);
 
         System.out.println(tableImpl.selectAllRowsContain(columnIndex,searchedValue));

@@ -1,8 +1,6 @@
 package models.command;
-
 import interfaces.Command;
 import interfaces.Database;
-
 import java.io.IOException;
 
 public class OpenCommand implements Command {
