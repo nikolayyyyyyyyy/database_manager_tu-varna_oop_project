@@ -4,7 +4,6 @@ import interfaces.Database;
 import interfaces.Engine;
 import models.command.*;
 import models.core.DatabaseImpl;
-
 import java.util.*;
 
 public class DatabaseEngine implements Engine {
@@ -30,27 +29,18 @@ public class DatabaseEngine implements Engine {
             String input = this.scanner.nextLine();
             String[] arguments = input.split(" ");
 
-            command = commands.get(arguments[0]);
+            if(this.commands.containsKey(arguments[0])) {
+               command = this.commands.get(arguments[0]);
 
-            if(arguments[0].equals("exit")){
-
-                System.exit(0);
-            }
-
-            if(this.commands.containsKey(arguments[0])){
-                if(Objects.equals(arguments[0], "help") ||
-                        Objects.equals(arguments[0], "showtables")){
-                    command.execute();
-                } else {
-                    command.execute(Arrays
-                            .stream(arguments)
-                            .skip(1)
-                            .toArray(String[]::new));
-                }
+               command.execute(Arrays
+                       .stream(arguments)
+                       .skip(1)
+                       .toArray(String[]::new));
             } else {
 
-                System.out.println("Invalid command.");
+                System.out.println("Invalid command!");
             }
+
         }
     }
 
@@ -70,5 +60,6 @@ public class DatabaseEngine implements Engine {
         commands.put("showtables", new ShowTableCommand(this.database));
         commands.put("update", new UpdateCommand(this.database));
         commands.put("save", new SaveCommand(this.database));
+        commands.put("exit", new ExitCommand());
     }
 }
