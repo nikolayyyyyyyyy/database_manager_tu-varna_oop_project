@@ -64,11 +64,6 @@ public class TextFileManager implements FileManage {
 
     @Override
     public void writeFile(Path baseDirectory, Table tableImpl) throws IOException {
-        if (!BaseFileValidator.isFileExist(tableImpl.getName())) {
-
-            Files.createFile(baseDirectory.resolve(tableImpl.getName()));
-        }
-
         if(!tableImpl.getColumns().isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (Column column :

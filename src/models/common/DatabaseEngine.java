@@ -32,19 +32,24 @@ public class DatabaseEngine implements Engine {
 
             command = commands.get(arguments[0]);
 
-            if(!this.commands.containsKey(arguments[0])){
+            if(arguments[0].equals("exit")){
 
-                System.out.println("Invalid command.");
+                System.exit(0);
             }
 
-            if(Objects.equals(arguments[0], "help") ||
-                    Objects.equals(arguments[0], "showtables")){
-                command.execute();
+            if(this.commands.containsKey(arguments[0])){
+                if(Objects.equals(arguments[0], "help") ||
+                        Objects.equals(arguments[0], "showtables")){
+                    command.execute();
+                } else {
+                    command.execute(Arrays
+                            .stream(arguments)
+                            .skip(1)
+                            .toArray(String[]::new));
+                }
             } else {
-                command.execute(Arrays
-                        .stream(arguments)
-                        .skip(1)
-                        .toArray(String[]::new));
+
+                System.out.println("Invalid command.");
             }
         }
     }

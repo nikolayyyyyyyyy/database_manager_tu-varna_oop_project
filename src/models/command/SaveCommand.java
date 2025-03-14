@@ -19,7 +19,7 @@ public class SaveCommand implements Command {
             this.database.saveTable(tableName);
         } catch (IOException exception){
 
-            System.out.printf("Error saving file %s%n",tableName);
+            System.out.printf("Error saving file %s",tableName);
         }
     }
 }
