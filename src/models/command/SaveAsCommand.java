@@ -23,6 +23,7 @@ public class SaveAsCommand implements Command {
         }catch (IOException e){
 
             MessageLogger.log( String.format("Cannot save as %s something went wrong",tableName));
+            System.exit(0);
         }
     }
 }

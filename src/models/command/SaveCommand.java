@@ -23,6 +23,7 @@ public class SaveCommand implements Command {
         } catch (IOException exception){
 
             MessageLogger.log(String.format("Error saving file %s",tableName));
+            System.exit(0);
         }
     }
 }
