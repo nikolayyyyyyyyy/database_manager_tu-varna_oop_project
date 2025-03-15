@@ -1,11 +1,8 @@
 package models.core;
 import exception.DomainException;
-import interfaces.Column;
 import interfaces.FileManage;
-import interfaces.Row;
 import interfaces.Table;
 import models.common.BaseFileValidator;
-import models.common.MessageLogger;
 import models.common.TextFileManager;
 import java.io.IOException;
 import java.util.*;

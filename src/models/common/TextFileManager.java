@@ -11,90 +11,59 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TextFileManager implements FileManage {
 
     @Override
     public Table readFile(Path basePath, String fileName) throws IOException {
+        Path filePath = basePath.resolve(fileName);
+
         if (!BaseFileValidator.isFileExist(fileName)) {
-
-            Files.createFile(basePath.resolve(fileName));
-
+            Files.createFile(filePath);
             return new TableImpl(fileName);
         }
 
-        List<String> rows = Files.readAllLines(basePath.resolve(fileName));
+        List<String> rows = Files.readAllLines(filePath);
+        Table table = new TableImpl(fileName);
 
         if (rows.isEmpty()) {
-
-            return new TableImpl(fileName);
+            return table;
         }
-        Table tableImpl = new TableImpl(fileName);
 
-        String[] columnPair = rows.get(0).split(", ");
-        if (rows.size() == 1) {
+        String[] columnPairs = rows.get(0).split(", ");
 
-            for (String pair :
-                    columnPair) {
-                String[] nameTypeOfColumn = pair.split(": ");
+        Arrays.stream(columnPairs)
+                .map(pair -> pair.split(": "))
+                .map(parts -> new ColumnImpl(parts[0], ColumnType.valueOf(parts[1])))
+                .forEach(table::addColumn);
 
-                Column column = new ColumnImpl(nameTypeOfColumn[0],ColumnType.valueOf(nameTypeOfColumn[1]));
+        rows.stream()
+                .skip(1)
+                .map(record -> record.split(" "))
+                .forEach(table::addRow);
 
-                tableImpl.addColumn(column);
-            }
-        } else {
-
-            for (String pair :
-                    columnPair) {
-                String[] nameTypeOfColumn = pair.split(": ");
-
-                Column column = new ColumnImpl(nameTypeOfColumn[0],ColumnType.valueOf(nameTypeOfColumn[1]));
-
-                tableImpl.addColumn(column);            }
-
-            String[] records = rows
-                    .stream()
-                    .skip(1)
-                    .toArray(String[]::new);
-
-            for (String record :
-                    records) {
-                String[] values = record.split(" ");
-
-                tableImpl.addRow(values);
-            }
-        }
-        return tableImpl;
+        return table;
     }
 
     @Override
     public void writeFile(Path baseDirectory, Table tableImpl) throws IOException {
-        if(!tableImpl.getColumns().isEmpty()) {
-            StringBuilder sb = new StringBuilder();
+        Path filePath = baseDirectory.resolve(tableImpl.getName());
 
-            for (Column column :
-                    tableImpl.getColumns()) {
+        String header = tableImpl.getColumns().stream()
+                .map(column -> column.getName() + ": " + column.getColumnType())
+                .collect(Collectors.joining(", "));
 
-                sb.append(column.getName())
-                        .append(": ")
-                        .append(column.getColumnType())
-                        .append(", ");
-            }
+        List<String> lines = new ArrayList<>();
 
-            Files.writeString(baseDirectory.resolve(tableImpl.getName()),
-                    sb.toString().trim().replaceAll(",$", "") + "\n",
-                    StandardOpenOption.CREATE);
-
-
-            for (Row row :
-                    tableImpl.getRows()) {
-
-                Files.writeString(baseDirectory.resolve(tableImpl.getName()),
-                        row.print() + "\n",
-                        StandardOpenOption.APPEND);
-            }
-        }
+        lines.add(header);
+        tableImpl.getRows().stream()
+                .map(Row::print)
+                .forEach(lines::add);
+        Files.write(filePath, lines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 }
 
