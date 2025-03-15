@@ -3,6 +3,7 @@ package models.command;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
+import models.common.MessageLogger;
 import models.core.ColumnOperation;
 
 public class AggregateCommand implements Command {
@@ -21,6 +22,6 @@ public class AggregateCommand implements Command {
         ColumnOperation operation = ColumnOperation.valueOf(command[4]);
 
         Table table = this.database.getTable(tableName);
-        System.out.println(table.aggregate(searchedColumn,value,targetColumnIndex,operation));
+        MessageLogger.log(table.aggregate(searchedColumn,value,targetColumnIndex,operation));
     }
 }

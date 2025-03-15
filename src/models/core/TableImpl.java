@@ -112,18 +112,13 @@ public class TableImpl implements Table {
     }
 
     @Override
-    public String printRows() {
-        StringBuilder stringBuilder = new StringBuilder();
+    public void printRows() {
         if(this.rows.isEmpty()){
 
             System.out.printf("Table %s has no records.", this.name);
         }
 
-        for (Row row :
-                this.rows) {
-            stringBuilder.append(row.describe()).append("\n");
-        }
-        return stringBuilder.toString().trim();
+
     }
 
     @Override

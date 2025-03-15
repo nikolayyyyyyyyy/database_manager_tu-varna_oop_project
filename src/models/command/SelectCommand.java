@@ -3,6 +3,7 @@ package models.command;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
+import models.common.MessageLogger;
 
 public class SelectCommand implements Command {
     private final Database database;
@@ -18,6 +19,6 @@ public class SelectCommand implements Command {
         String searchedValue = command[1];
         Table tableImpl = database.getTable(tableName);
 
-        System.out.println(tableImpl.selectAllRowsContain(columnIndex,searchedValue));
+        MessageLogger.log(tableImpl.selectAllRowsContain(columnIndex,searchedValue));
     }
 }

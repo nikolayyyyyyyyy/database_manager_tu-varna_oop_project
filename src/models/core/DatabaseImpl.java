@@ -5,6 +5,7 @@ import interfaces.FileManage;
 import interfaces.Row;
 import interfaces.Table;
 import models.common.BaseFileValidator;
+import models.common.MessageLogger;
 import models.common.TextFileManager;
 import java.io.IOException;
 import java.util.*;
@@ -90,7 +91,6 @@ public class DatabaseImpl implements interfaces.Database {
         } else {
 
             this.tables.remove(fileName);
-            System.out.println("Closed table -> ".concat(fileName));
         }
     }
 

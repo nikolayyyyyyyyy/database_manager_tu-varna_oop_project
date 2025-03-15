@@ -13,9 +13,8 @@ public class PrintCommand implements Command {
     @Override
     public void execute(String... command) {
         String tableName = command[0];
-
-        System.out.println(this.database
+        this.database
                 .getTable(tableName)
-                .printRows());
+                .printRows();
     }
 }

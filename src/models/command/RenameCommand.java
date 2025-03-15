@@ -1,8 +1,10 @@
 package models.command;
 
+import exception.DomainException;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
+import models.common.MessageLogger;
 import models.core.TableImpl;
 
 public class RenameCommand implements Command {
@@ -17,7 +19,13 @@ public class RenameCommand implements Command {
         String tableName = command[0];
         String newTableName = command[1];
 
-        Table tableImpl = this.database.getTable(tableName);
-        tableImpl.rename(newTableName);
+        try {
+
+            Table tableImpl = this.database.getTable(tableName);
+            tableImpl.rename(newTableName);
+        }catch (DomainException exception){
+
+            MessageLogger.log(exception.getMessage());
+        }
     }
 }

@@ -2,6 +2,7 @@ package models.command;
 
 import interfaces.Command;
 import interfaces.Database;
+import models.common.MessageLogger;
 
 public class HelpCommand implements Command {
     private final Database database;
@@ -12,7 +13,6 @@ public class HelpCommand implements Command {
 
     @Override
     public void execute(String... command) {
-
-        System.out.println(this.database.printHelp());
+        MessageLogger.log(this.database.printHelp());
     }
 }

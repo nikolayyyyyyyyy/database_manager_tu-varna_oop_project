@@ -3,6 +3,7 @@ package models.command;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
+import models.common.MessageLogger;
 
 public class DeleteCommand implements Command {
     private final Database database;
@@ -18,6 +19,6 @@ public class DeleteCommand implements Command {
         String searchedValue = command[2];
 
         Table tableImpl = this.database.getTable(tableName);
-        System.out.println(tableImpl.deleteTableWhereRowContainsAt(columnIndex,searchedValue));
+        MessageLogger.log(tableImpl.deleteTableWhereRowContainsAt(columnIndex,searchedValue));
     }
 }

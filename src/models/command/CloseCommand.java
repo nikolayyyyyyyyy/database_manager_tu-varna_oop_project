@@ -2,6 +2,7 @@ package models.command;
 
 import interfaces.Command;
 import interfaces.Database;
+import models.common.MessageLogger;
 
 public class CloseCommand implements Command {
     private final Database database;
@@ -15,5 +16,6 @@ public class CloseCommand implements Command {
         String tableName = command[0];
         this.database.closeTable(tableName);
 
+        MessageLogger.log("Closed table -> ".concat(tableName));
     }
 }

@@ -1,7 +1,9 @@
 package models.command;
+import exception.DomainException;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
+import models.common.MessageLogger;
 
 public class UpdateCommand implements Command {
     private final Database database;
@@ -18,11 +20,17 @@ public class UpdateCommand implements Command {
         int targetColumnIndex = Integer.parseInt(command[3]);
         String targetValue = command[4];
 
-        Table tableImpl = this.database.getTable(tableName);
+        try {
+            Table tableImpl = this.database.getTable(tableName);
 
-        System.out.println(tableImpl.updateRowValueAtIndexWhereContainsAt(columnIndex,
-                targetColumnIndex,
-                searchedValue,
-                targetValue));
+            MessageLogger.log(tableImpl.updateRowValueAtIndexWhereContainsAt(columnIndex,
+                    targetColumnIndex,
+                    searchedValue,
+                    targetValue));
+
+        }catch (DomainException e){
+
+            MessageLogger.log(e.getMessage());
+        }
     }
 }

@@ -3,6 +3,7 @@ import interfaces.Column;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
+import models.common.MessageLogger;
 import models.core.ColumnImpl;
 import models.core.ColumnType;
 
@@ -21,6 +22,6 @@ public class AddColumnCommand implements Command {
         Table tableImpl = this.database.getTable(tableName);
         tableImpl.addColumn(column);
 
-        System.out.println("Added column -> ".concat(column.getName()));
+        MessageLogger.log("Added column -> ".concat(column.getName()));
     }
 }

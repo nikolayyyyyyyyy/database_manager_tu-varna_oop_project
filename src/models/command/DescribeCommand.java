@@ -3,6 +3,7 @@ package models.command;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
+import models.common.MessageLogger;
 
 public class DescribeCommand implements Command {
     private final Database database;
@@ -16,6 +17,6 @@ public class DescribeCommand implements Command {
         String tableName = command[0];
         Table tableImpl = this.database.getTable(tableName);
 
-        System.out.println(tableImpl.printColumnTypes());
+        MessageLogger.log(tableImpl.printColumnTypes());
     }
 }

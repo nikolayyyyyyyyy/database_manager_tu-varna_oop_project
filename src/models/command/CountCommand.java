@@ -2,6 +2,7 @@ package models.command;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
+import models.common.MessageLogger;
 
 public class CountCommand implements Command {
     private final Database database;
@@ -18,6 +19,6 @@ public class CountCommand implements Command {
 
         Table tableImpl = this.database.getTable(tableName);
 
-        System.out.println(tableImpl.getCountRowsContainAt(columnIndex,searchedValue));
+        MessageLogger.log(tableImpl.getCountRowsContainAt(columnIndex,searchedValue));
     }
 }

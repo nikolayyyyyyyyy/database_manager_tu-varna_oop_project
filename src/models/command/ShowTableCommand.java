@@ -1,7 +1,9 @@
 package models.command;
 
+import exception.DomainException;
 import interfaces.Command;
 import interfaces.Database;
+import models.common.MessageLogger;
 
 public class ShowTableCommand implements Command {
     private final Database database;
@@ -12,7 +14,12 @@ public class ShowTableCommand implements Command {
 
     @Override
     public void execute(String... command) {
+        try {
 
-        System.out.println(this.database.printTables());
+            MessageLogger.log(this.database.printTables());
+        }catch (DomainException e){
+
+            MessageLogger.log(e.getMessage());
+        }
     }
 }

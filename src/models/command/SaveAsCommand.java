@@ -2,6 +2,7 @@ package models.command;
 
 import interfaces.Command;
 import interfaces.Database;
+import models.common.MessageLogger;
 
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ public class SaveAsCommand implements Command {
             this.database.saveTableAs(tableName, newTableName);
         }catch (IOException e){
 
-            System.out.printf("Error saving file %s",tableName);
+            MessageLogger.log( String.format("Cannot save as %s something went wrong",tableName));
         }
     }
 }
