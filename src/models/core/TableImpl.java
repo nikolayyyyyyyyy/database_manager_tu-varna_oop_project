@@ -118,9 +118,10 @@ public class TableImpl implements Table {
         if(this.rows.isEmpty()){
 
             MessageLogger.log(String.format("Table %s has no records.", this.name));
-        }
+        } else {
 
-        initPagPrinting(this.rows);
+            initPagPrinting(this.rows);
+        }
     }
 
     @Override
@@ -139,9 +140,10 @@ public class TableImpl implements Table {
         if(selectedRows.isEmpty()){
 
             MessageLogger.log("No rows match the value at given index.");
-        }
+        } else {
 
-        initPagPrinting(selectedRows);
+            initPagPrinting(selectedRows);
+        }
     }
 
     @Override
@@ -255,41 +257,44 @@ public class TableImpl implements Table {
             all.add(new ArrayList<>(rows.subList(i, end)));
         }
 
-        ListIterator<List<Row>> iterator = all.listIterator();
-
-        while (iterator.hasNext()){
+        for(int i = 0; i < all.size(); i++){
+            MessageLogger.log("---------------------------------------");
             StringBuilder stringBuilder = new StringBuilder();
-
-            MessageLogger.log("--------------------------------------");
             for (Row row :
-                    iterator.next()) {
+                    all.get(i)) {
                 stringBuilder.append(row.describe()).append("\n");
             }
             MessageLogger.log(stringBuilder.toString().trim());
-            MessageLogger.log("Type exit to exit, next to continue or previous to go back");
             String command = scanner.nextLine();
 
-            MessageLogger.log("> ");
-            MessageLogger.log("--------------------------------------");
-            switch (command){
-                case "exit":
-                    return;
-                case "next":
-                    if(iterator.hasNext()){
-                        iterator.next();
-                    }
-                    break;
-                case "previous":
-                    if(iterator.hasPrevious()){
-                        iterator.previous();
-                    }
-                    break;
-                default:
+            while (true) {
 
-                    MessageLogger.log("Invalid command");
-                    break;
+                if (Objects.equals(command, "next")) {
+                    if (i + 1 >= all.size()) {
+
+                        MessageLogger.log("No more records");
+                    } else {
+                        break;
+                    }
+                } else if (Objects.equals(command, "previous")) {
+                    if (i - 1 < 0) {
+
+                        MessageLogger.log("This is page 1.");
+                    } else {
+
+                        i-=2;
+                        break;
+                    }
+
+                } else if (Objects.equals(command, "exit")) {
+                    return;
+                } else {
+                    MessageLogger.log("Invalid command!");
+                    return;
+                }
+
+                command = scanner.nextLine();
             }
         }
-        MessageLogger.log("No records in this table.");
     }
 }
