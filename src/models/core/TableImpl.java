@@ -50,16 +50,13 @@ public class TableImpl implements Table {
     }
 
     @Override
-    public void printRows() {
+    public String printRows() {
         if(this.rows.isEmpty()){
 
             System.out.printf("Table %s has no records.", this.name);
         }
 
-        for (Row row :
-                this.rows) {
-            System.out.println(row.print());
-        }
+        return "";
     }
 
     @Override

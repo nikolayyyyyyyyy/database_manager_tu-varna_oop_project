@@ -10,7 +10,7 @@ public interface Table {
     Set<Column> getColumns();
     String getName();
     String printColumnTypes();
-    void printRows();
+    String printRows();
     String selectAllRowsContain(int columnIndex,String value);
     void addColumn(ColumnType type,String name);
     String updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue,String newValue);
