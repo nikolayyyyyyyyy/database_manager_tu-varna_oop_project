@@ -19,6 +19,6 @@ public class SelectCommand implements Command {
         String searchedValue = command[1];
         Table tableImpl = database.getTable(tableName);
 
-        MessageLogger.log(tableImpl.selectAllRowsContain(columnIndex,searchedValue));
+        tableImpl.selectAllRowsContain(columnIndex,searchedValue);
     }
 }

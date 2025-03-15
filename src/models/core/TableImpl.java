@@ -4,7 +4,7 @@ import interfaces.Column;
 import interfaces.Row;
 import interfaces.Table;
 import models.common.BaseFileValidator;
-
+import models.common.MessageLogger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -12,11 +12,13 @@ public class TableImpl implements Table {
     private String name;
     private final List<Column> columns;
     private final List<Row> rows;
+    private final Scanner scanner;
 
     public TableImpl(String name) {
         this.name = name;
         this.columns = new ArrayList<>();
         this.rows = new ArrayList<>();
+        this.scanner = new Scanner(System.in);
     }
 
     @Override
@@ -115,14 +117,14 @@ public class TableImpl implements Table {
     public void printRows() {
         if(this.rows.isEmpty()){
 
-            System.out.printf("Table %s has no records.", this.name);
+            MessageLogger.log(String.format("Table %s has no records.", this.name));
         }
 
-
+        initPagPrinting(this.rows);
     }
 
     @Override
-    public String selectAllRowsContain(int columnIndex,String value) {
+    public void selectAllRowsContain(int columnIndex,String value) {
         if(columnIndex > this.columns.size()){
 
             throw new DomainException("Index out of range!Try again ;)");
@@ -136,16 +138,10 @@ public class TableImpl implements Table {
 
         if(selectedRows.isEmpty()){
 
-            return "No rows match the value at given index.";
-        }
-        StringBuilder sb = new StringBuilder();
-
-        for (Row row :
-                selectedRows) {
-            sb.append(row.describe()).append("\n");
+            MessageLogger.log("No rows match the value at given index.");
         }
 
-        return sb.toString().trim();
+        initPagPrinting(selectedRows);
     }
 
     @Override
@@ -250,4 +246,50 @@ public class TableImpl implements Table {
                 .count();
     }
 
+    private void initPagPrinting(List<Row> rows) {
+        List<List<Row>> all = new ArrayList<>();
+
+        for (int i = 0; i < rows.size(); i += 5) {
+
+            int end = Math.min(i + 5, rows.size());
+            all.add(new ArrayList<>(rows.subList(i, end)));
+        }
+
+        ListIterator<List<Row>> iterator = all.listIterator();
+
+        while (iterator.hasNext()){
+            StringBuilder stringBuilder = new StringBuilder();
+
+            MessageLogger.log("--------------------------------------");
+            for (Row row :
+                    iterator.next()) {
+                stringBuilder.append(row.describe()).append("\n");
+            }
+            MessageLogger.log(stringBuilder.toString().trim());
+            MessageLogger.log("Type exit to exit, next to continue or previous to go back");
+            String command = scanner.nextLine();
+
+            MessageLogger.log("> ");
+            MessageLogger.log("--------------------------------------");
+            switch (command){
+                case "exit":
+                    return;
+                case "next":
+                    if(iterator.hasNext()){
+                        iterator.next();
+                    }
+                    break;
+                case "previous":
+                    if(iterator.hasPrevious()){
+                        iterator.previous();
+                    }
+                    break;
+                default:
+
+                    MessageLogger.log("Invalid command");
+                    break;
+            }
+        }
+        MessageLogger.log("No records in this table.");
+    }
 }

@@ -96,10 +96,9 @@ public class DatabaseImpl implements interfaces.Database {
 
     @Override
     public void saveTable(String tableName) throws IOException {
+        this.fileManage.writeFile(BaseFileValidator.getBase(),
+                this.tables.get(tableName));
 
-        this.fileManage.writeFile(BaseFileValidator.getBase(), this.tables.get(tableName));
-
-        System.out.println("Saved table -> ".concat(tableName));
         this.closeTable(tableName);
     }
 

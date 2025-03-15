@@ -18,6 +18,8 @@ public class SaveCommand implements Command {
         String tableName = command[0];
         try {
             this.database.saveTable(tableName);
+            MessageLogger.log("Saved table -> ".concat(tableName));
+
         } catch (IOException exception){
 
             MessageLogger.log(String.format("Error saving file %s",tableName));
