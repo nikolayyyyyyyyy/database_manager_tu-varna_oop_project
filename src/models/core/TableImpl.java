@@ -4,6 +4,7 @@ import interfaces.Column;
 import interfaces.Row;
 import interfaces.Table;
 import models.common.BaseFileValidator;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,63 @@ public class TableImpl implements Table {
         this.name = name;
         this.columns = new ArrayList<>();
         this.rows = new ArrayList<>();
+    }
+
+    @Override
+    public double aggregate(int columnIndex, String value,int targetColumnIndex ,ColumnOperation columnOperation) {
+        if(columnIndex >= this.columns.size()
+        || targetColumnIndex >= this.columns.size()){
+
+            throw new DomainException("No column at given index");
+        }
+        Column searchedColumn = this.columns.get(columnIndex);
+        Column targetColumn = this.columns.get(targetColumnIndex);
+
+        if(targetColumn.getColumnType() == ColumnType.STRING){
+
+            throw new DomainException("Cannot aggregate on STRING");
+        }
+
+        List<Row> matchedRows = this.rows
+                .stream()
+                .filter(r -> r.getAttributeFromColumn(searchedColumn).equals(value))
+                .collect(Collectors.toList());
+
+        if(matchedRows.isEmpty()){
+
+            throw new DomainException("Impossible to aggregate.");
+        }
+
+        double result;
+        if(columnOperation == ColumnOperation.MAXIMUM){
+            result = matchedRows
+                    .stream()
+                    .mapToDouble(r -> Double.parseDouble(r.getAttributeFromColumn(targetColumn)))
+                    .max()
+                    .orElseThrow();
+        } else if(columnOperation == ColumnOperation.MINIMUM){
+
+            result = matchedRows
+                    .stream()
+                    .mapToDouble(r -> Double.parseDouble(r.getAttributeFromColumn(targetColumn)))
+                    .min()
+                    .orElseThrow();
+        } else if(columnOperation == ColumnOperation.PRODUCT){
+
+            result = matchedRows.stream()
+                    .mapToDouble(row -> Double.parseDouble(row.getAttributeFromColumn(targetColumn)))
+                    .reduce(1, (a, b) -> a * b);
+        } else if(columnOperation == ColumnOperation.SUM){
+
+            result = matchedRows
+                    .stream()
+                    .mapToDouble(r -> Double.parseDouble(r.getAttributeFromColumn(targetColumn)))
+                    .sum();
+        } else {
+
+            throw new DomainException("Invalid type to aggregate.");
+        }
+        return result;
     }
 
     @Override
@@ -55,11 +113,11 @@ public class TableImpl implements Table {
 
     @Override
     public String printRows() {
+        StringBuilder stringBuilder = new StringBuilder();
         if(this.rows.isEmpty()){
 
             System.out.printf("Table %s has no records.", this.name);
         }
-        StringBuilder stringBuilder = new StringBuilder();
 
         for (Row row :
                 this.rows) {

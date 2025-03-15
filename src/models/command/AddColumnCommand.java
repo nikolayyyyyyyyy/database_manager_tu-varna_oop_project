@@ -16,7 +16,7 @@ public class AddColumnCommand implements Command {
     @Override
     public void execute(String... command) {
         String tableName = command[0];
-        Column column = new ColumnImpl(command[1],ColumnType.valueOf(command[1]));
+        Column column = new ColumnImpl(command[1],ColumnType.valueOf(command[2]));
 
         Table tableImpl = this.database.getTable(tableName);
         tableImpl.addColumn(column);

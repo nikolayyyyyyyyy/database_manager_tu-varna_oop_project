@@ -1,8 +1,10 @@
 package interfaces;
+import models.core.ColumnOperation;
 import java.util.List;
 
 public interface Table {
 
+    double aggregate(int columnIndex, String value,int targetColumnIndex, ColumnOperation columnOperation);
     List<Row> getRows();
     List<Column> getColumns();
     String getName();

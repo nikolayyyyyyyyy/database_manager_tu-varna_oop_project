@@ -3,6 +3,7 @@ import interfaces.Column;
 import interfaces.FileManage;
 import interfaces.Row;
 import interfaces.Table;
+import models.core.ColumnImpl;
 import models.core.ColumnType;
 import models.core.TableImpl;
 
@@ -37,15 +38,20 @@ public class TextFileManager implements FileManage {
             for (String pair :
                     columnPair) {
                 String[] nameTypeOfColumn = pair.split(": ");
-                tableImpl.addColumn(ColumnType.valueOf(nameTypeOfColumn[0]),nameTypeOfColumn[1]);
+
+                Column column = new ColumnImpl(nameTypeOfColumn[0],ColumnType.valueOf(nameTypeOfColumn[1]));
+
+                tableImpl.addColumn(column);
             }
         } else {
 
             for (String pair :
                     columnPair) {
                 String[] nameTypeOfColumn = pair.split(": ");
-                tableImpl.addColumn(ColumnType.valueOf(nameTypeOfColumn[1]), nameTypeOfColumn[0]);
-            }
+
+                Column column = new ColumnImpl(nameTypeOfColumn[0],ColumnType.valueOf(nameTypeOfColumn[1]));
+
+                tableImpl.addColumn(column);            }
 
             String[] records = rows
                     .stream()
@@ -77,7 +83,7 @@ public class TextFileManager implements FileManage {
             }
 
             Files.writeString(baseDirectory.resolve(tableImpl.getName()),
-                    sb.toString().trim() + "\n",
+                    sb.toString().trim().replaceAll(",$", "") + "\n",
                     StandardOpenOption.CREATE);
 
 
