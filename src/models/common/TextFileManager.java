@@ -31,20 +31,20 @@ public class TextFileManager implements FileManage {
         }
         Table tableImpl = new TableImpl(fileName);
 
-        String[] columnPair = rows.get(0).split(",");
+        String[] columnPair = rows.get(0).split(", ");
         if (rows.size() == 1) {
 
             for (String pair :
                     columnPair) {
-                String[] nameTypeOfColumn = pair.split("-");
+                String[] nameTypeOfColumn = pair.split(": ");
                 tableImpl.addColumn(ColumnType.valueOf(nameTypeOfColumn[0]),nameTypeOfColumn[1]);
             }
         } else {
 
             for (String pair :
                     columnPair) {
-                String[] nameTypeOfColumn = pair.split("-");
-                tableImpl.addColumn(ColumnType.valueOf(nameTypeOfColumn[0]), nameTypeOfColumn[1]);
+                String[] nameTypeOfColumn = pair.split(": ");
+                tableImpl.addColumn(ColumnType.valueOf(nameTypeOfColumn[1]), nameTypeOfColumn[0]);
             }
 
             String[] records = rows
@@ -66,18 +66,27 @@ public class TextFileManager implements FileManage {
     public void writeFile(Path baseDirectory, Table tableImpl) throws IOException {
         if(!tableImpl.getColumns().isEmpty()) {
             StringBuilder sb = new StringBuilder();
+
             for (Column column :
                     tableImpl.getColumns()) {
 
-                sb.append(column.getColumnType()).append("-").append(column.getName()).append(",");
+                sb.append(column.getName())
+                        .append(": ")
+                        .append(column.getColumnType())
+                        .append(", ");
             }
 
-            Files.writeString(baseDirectory.resolve(tableImpl.getName()), sb.toString().trim() + "\n", StandardOpenOption.CREATE);
+            Files.writeString(baseDirectory.resolve(tableImpl.getName()),
+                    sb.toString().trim() + "\n",
+                    StandardOpenOption.CREATE);
 
 
             for (Row row :
                     tableImpl.getRows()) {
-                Files.writeString(baseDirectory.resolve(tableImpl.getName()), String.join(" ", row.print()) + "\n", StandardOpenOption.APPEND);
+
+                Files.writeString(baseDirectory.resolve(tableImpl.getName()),
+                        row.print() + "\n",
+                        StandardOpenOption.APPEND);
             }
         }
     }

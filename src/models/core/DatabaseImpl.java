@@ -1,6 +1,8 @@
 package models.core;
 import exception.DomainException;
+import interfaces.Column;
 import interfaces.FileManage;
+import interfaces.Row;
 import interfaces.Table;
 import models.common.BaseFileValidator;
 import models.common.TextFileManager;
@@ -115,9 +117,8 @@ public class DatabaseImpl implements interfaces.Database {
     }
 
     @Override
-    public String innerJoinTables(String firstTable, String firstValue,
-                                  String secondTable, String secondValue) {
-
+    public String innerJoinTables(String firstTable, int firstColIndex,
+                                  String secondTable, int secondColIndex) {
         return "";
     }
 }

@@ -1,6 +1,5 @@
 package models.core;
 import interfaces.Column;
-
 import java.util.*;
 
 public class ColumnImpl implements Column {
@@ -10,11 +9,6 @@ public class ColumnImpl implements Column {
     public ColumnImpl(String name, ColumnType type){
         this.name = name;
         this.type = type;
-    }
-
-    @Override
-    public String print() {
-        return String.format("Name: %s Type: %s",this.name,this.type);
     }
 
     @Override

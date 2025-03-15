@@ -1,18 +1,15 @@
 package interfaces;
-import models.core.ColumnType;
-
 import java.util.List;
-import java.util.Set;
 
 public interface Table {
 
     List<Row> getRows();
-    Set<Column> getColumns();
+    List<Column> getColumns();
     String getName();
     String printColumnTypes();
     String printRows();
     String selectAllRowsContain(int columnIndex,String value);
-    void addColumn(ColumnType type,String name);
+    void addColumn(Column column);
     String updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue,String newValue);
     String deleteTableWhereRowContainsAt(int index,String value);
     void addRow(String[] values);

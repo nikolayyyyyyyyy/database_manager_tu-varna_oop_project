@@ -1,31 +1,53 @@
 package models.core;
-import java.util.ArrayList;
-import java.util.List;
+import interfaces.Column;
+import interfaces.Row;
 
-public class RowImpl implements interfaces.Row {
-    private final List<String> records;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+public class RowImpl implements Row {
+    private final Map<Column,String> attributes;
 
     public RowImpl(){
-        this.records = new ArrayList<>();
+        this.attributes = new LinkedHashMap<>();
     }
 
     @Override
-    public void addValue(String value) {
-        this.records.add(value);
+    public void addAttribute(Column column,String attribute) {
+        this.attributes.put(column,attribute);
     }
 
     @Override
-    public String getValueAt(int index) {
-        return this.records.get(index);
-    }
-
-    @Override
-    public void updateValueAt(int index,String value) {
-        this.records.set(index,value);
+    public String getAttributeFromColumn(Column column) {
+        return this.attributes.get(column);
     }
 
     @Override
     public String print() {
-        return String.join(" ",this.records);
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (String values :
+                this.attributes.values()) {
+            stringBuilder.append(values).append(" ");
+        }
+        return stringBuilder.toString().trim();
+    }
+
+    @Override
+    public String describe() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Column column :
+                this.attributes.keySet()){
+
+            stringBuilder
+                    .append(column.getName())
+                    .append(": ")
+                    .append(this.attributes.get(column))
+                    .append(" ");
+        }
+        return stringBuilder.toString().trim();
     }
 }

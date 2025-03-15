@@ -14,8 +14,8 @@ public class PrintCommand implements Command {
     public void execute(String... command) {
         String tableName = command[0];
 
-        this.database
+        System.out.println(this.database
                 .getTable(tableName)
-                .printRows();
+                .printRows());
     }
 }

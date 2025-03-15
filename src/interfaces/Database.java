@@ -7,7 +7,7 @@ public interface Database {
     void closeTable(String fileName);
     void saveTable(String tableName) throws IOException;
     void saveTableAs(String oldFileName,String newFileName) throws IOException;
-    String innerJoinTables(String firstTable,String firstValue,String secondTable,String secondValue);
+    String innerJoinTables(String firstTable,int firstColIndex,String secondTable,int secondColIndex);
     String printHelp();
     Table getTable(String name);
 }

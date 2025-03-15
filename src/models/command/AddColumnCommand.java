@@ -1,7 +1,9 @@
 package models.command;
+import interfaces.Column;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
+import models.core.ColumnImpl;
 import models.core.ColumnType;
 
 public class AddColumnCommand implements Command {
@@ -14,12 +16,11 @@ public class AddColumnCommand implements Command {
     @Override
     public void execute(String... command) {
         String tableName = command[0];
-        String columnName = command[1];
-        ColumnType columnType = ColumnType.valueOf(command[2]);
+        Column column = new ColumnImpl(command[1],ColumnType.valueOf(command[1]));
 
         Table tableImpl = this.database.getTable(tableName);
+        tableImpl.addColumn(column);
 
-        tableImpl.addColumn(columnType,columnName);
-        System.out.println("Added column -> ".concat(columnName));
+        System.out.println("Added column -> ".concat(column.getName()));
     }
 }

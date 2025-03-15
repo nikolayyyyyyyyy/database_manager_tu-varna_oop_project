@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 
 public class TableImpl implements Table {
     private String name;
-    private final Set<Column> columns;
+    private final List<Column> columns;
     private final List<Row> rows;
 
     public TableImpl(String name) {
         this.name = name;
-        this.columns = new LinkedHashSet<>();
+        this.columns = new ArrayList<>();
         this.rows = new ArrayList<>();
     }
 
@@ -24,7 +24,7 @@ public class TableImpl implements Table {
     }
 
     @Override
-    public Set<Column> getColumns() {
+    public List<Column> getColumns() {
         return this.columns;
     }
 
@@ -43,7 +43,11 @@ public class TableImpl implements Table {
 
         for (Column column :
                 this.columns) {
-            stringBuilder.append(column.print()).append(" ");
+            stringBuilder
+                    .append(column.getName())
+                    .append(": ")
+                    .append(column.getColumnType())
+                    .append(" ");
         }
 
         return stringBuilder.toString().trim();
@@ -55,8 +59,13 @@ public class TableImpl implements Table {
 
             System.out.printf("Table %s has no records.", this.name);
         }
+        StringBuilder stringBuilder = new StringBuilder();
 
-        return "";
+        for (Row row :
+                this.rows) {
+            stringBuilder.append(row.describe()).append("\n");
+        }
+        return stringBuilder.toString().trim();
     }
 
     @Override
@@ -65,9 +74,11 @@ public class TableImpl implements Table {
 
             throw new DomainException("Index out of range!Try again ;)");
         }
+        Column column = new ArrayList<>(this.columns)
+                .get(columnIndex);
 
         List<Row> selectedRows = this.rows.stream()
-                .filter(r -> r.getValueAt(columnIndex).equals(value))
+                .filter(r -> r.getAttributeFromColumn(column).equals(value))
                 .collect(Collectors.toList());
 
         if(selectedRows.isEmpty()){
@@ -78,25 +89,24 @@ public class TableImpl implements Table {
 
         for (Row row :
                 selectedRows) {
-            sb.append(row.print()).append("\n");
+            sb.append(row.describe()).append("\n");
         }
 
         return sb.toString().trim();
     }
 
     @Override
-    public void addColumn(ColumnType type,String name) {
-        ColumnImpl columnImpl = new ColumnImpl(name,type);
-        if (this.columns.contains(columnImpl)){
+    public void addColumn(Column column) {
+        if (this.columns.contains(column)){
 
             throw new DomainException("Column already exist");
         }
-        this.columns.add(columnImpl);
+        this.columns.add(column);
 
         if(!rows.isEmpty()) {
             for (Row row :
                     this.rows) {
-                row.addValue("Null");
+                row.addAttribute(column,"Null");
             }
         }
     }
@@ -108,8 +118,11 @@ public class TableImpl implements Table {
             throw new DomainException("Index out of range exception");
         }
 
+        Column column = this.columns.get(index);
+        Column column1 = this.columns.get(targetIndex);
+
         List<Row> rows = this.rows
-                .stream().filter(r -> r.getValueAt(index).equals(oldValue))
+                .stream().filter(r -> r.getAttributeFromColumn(column).equals(oldValue))
                 .collect(Collectors.toList());
 
         if(rows.isEmpty()){
@@ -118,17 +131,23 @@ public class TableImpl implements Table {
 
         for (Row row :
                 rows) {
-            row.updateValueAt(targetIndex,newValue);
+            row.addAttribute(column1,newValue);
         }
         return String.format("%d rows affected.",rows.size());
     }
 
     @Override
     public String deleteTableWhereRowContainsAt(int index, String value) {
-        if(this.rows.stream().anyMatch(r -> r.getValueAt(index).equals(value))){
+        if(index >= this.columns.size()){
+
+            throw new DomainException("There is no column at given index.");
+        }
+        Column column = this.columns.get(index);
+
+        if(this.rows.stream().anyMatch(r -> r.getAttributeFromColumn(column).equals(value))){
 
             List<Row> roesToDelete = this.rows.stream()
-                    .filter(r -> r.getValueAt(index).equals(value))
+                    .filter(r -> r.getAttributeFromColumn(column).equals(value))
                     .collect(Collectors.toList());
 
             this.rows.removeAll(roesToDelete);
@@ -146,9 +165,9 @@ public class TableImpl implements Table {
         } else {
 
             RowImpl row = new RowImpl();
-            for (String value :
-                    values) {
-                row.addValue(value);
+            for(int i = 0; i < values.length; i++) {
+
+                row.addAttribute(this.columns.get(i),values[i]);
             }
             this.rows.add(row);
         }
@@ -166,9 +185,15 @@ public class TableImpl implements Table {
 
     @Override
     public int getCountRowsContainAt(int index,String value) {
+        if(index >= this.columns.size()){
+
+            throw new DomainException("There is no column at given index.");
+        }
+
+        Column column = this.columns.get(index);
         return (int)this.rows
                 .stream()
-                .filter(r -> r.getValueAt(index).equals(value))
+                .filter(r -> r.getAttributeFromColumn(column).equals(value))
                 .count();
     }
 
