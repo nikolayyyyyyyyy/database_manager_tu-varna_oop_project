@@ -46,7 +46,6 @@ public class DatabaseEngine implements Engine {
             } else {
 
                 System.out.println("Invalid command!");
-                break;
             }
         }
     }

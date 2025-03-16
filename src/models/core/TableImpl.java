@@ -53,7 +53,8 @@ public class TableImpl implements Table {
 
         List<Row> matchedRows = this.rows
                 .stream()
-                .filter(r -> r.getAttributeFromColumn(searchedColumn).equals(value))
+                .filter(r -> r.getAttributeFromColumn(searchedColumn).equals(value)
+                && !r.getAttributeFromColumn(searchedColumn).equals("Null"))
                 .collect(Collectors.toList());
 
         if(matchedRows.isEmpty()){
@@ -107,10 +108,10 @@ public class TableImpl implements Table {
                     .append(column.getName())
                     .append(": ")
                     .append(column.getColumnType())
-                    .append(" ");
+                    .append(", ");
         }
 
-        return stringBuilder.toString().trim();
+        return stringBuilder.toString().trim().replaceAll(",$", "");
     }
 
     @Override

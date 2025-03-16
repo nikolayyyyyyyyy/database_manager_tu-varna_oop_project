@@ -21,7 +21,7 @@ public class JoinCommand implements Command {
 
         try {
 
-            this.database.innerJoinTables(firstTable,firstColumnIndex,secondTable,secondColumnIndex);
+            MessageLogger.log(this.database.innerJoinTables(firstTable,firstColumnIndex,secondTable,secondColumnIndex));
         }catch (DomainException exception){
 
             MessageLogger.log(exception.getMessage());

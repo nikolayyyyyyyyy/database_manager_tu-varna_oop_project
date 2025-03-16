@@ -148,6 +148,6 @@ public class DatabaseImpl implements interfaces.Database {
 
         this.tables.put(joinedTable.getName(),joinedTable);
 
-        return joinedTable.getName();
+        return "Joined table: " + joinedTable.getName();
     }
 }

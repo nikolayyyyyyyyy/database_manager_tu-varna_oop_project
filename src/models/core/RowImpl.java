@@ -43,8 +43,8 @@ public class RowImpl implements Row {
                     .append(column.getName())
                     .append(": ")
                     .append(this.attributes.get(column))
-                    .append(" ");
+                    .append(", ");
         }
-        return stringBuilder.toString().trim();
+        return stringBuilder.toString().trim().replaceAll(",$", "");
     }
 }
