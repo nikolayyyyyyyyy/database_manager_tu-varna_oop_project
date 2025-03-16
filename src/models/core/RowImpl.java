@@ -12,32 +12,16 @@ public class RowImpl implements Row {
     }
 
     @Override
-    public void addAttribute(Column column,String attribute) {
-        this.attributes.put(column,attribute);
+    public Map<Column, String> getAttributes() {
+        return this.attributes;
     }
 
     @Override
-    public String getAttributeFromColumn(Column column) {
-        return this.attributes.get(column);
-    }
-
-    @Override
-    public String print() {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for (String values :
-                this.attributes.values()) {
-            stringBuilder.append(values).append(" ");
-        }
-        return stringBuilder.toString().trim();
-    }
-
-    @Override
-    public String describe() {
+    public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (Column column :
-                this.attributes.keySet()){
+                this.attributes.keySet()) {
 
             stringBuilder
                     .append(column.getName())

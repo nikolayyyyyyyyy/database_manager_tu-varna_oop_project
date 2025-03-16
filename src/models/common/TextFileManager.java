@@ -1,20 +1,15 @@
 package models.common;
-import interfaces.Column;
 import interfaces.FileManage;
-import interfaces.Row;
 import interfaces.Table;
 import models.core.ColumnImpl;
 import models.core.ColumnType;
 import models.core.TableImpl;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TextFileManager implements FileManage {
 
@@ -22,7 +17,7 @@ public class TextFileManager implements FileManage {
     public Table readFile(Path basePath, String fileName) throws IOException {
         Path filePath = basePath.resolve(fileName);
 
-        if (!BaseFileValidator.isFileExist(fileName)) {
+        if (!filePath.toFile().exists()) {
             Files.createFile(filePath);
             return new TableImpl(fileName);
         }
@@ -53,31 +48,7 @@ public class TextFileManager implements FileManage {
     public void writeFile(Path baseDirectory, Table tableImpl) throws IOException {
         Path filePath = baseDirectory.resolve(tableImpl.getName());
 
-        String header = tableImpl.getColumns().stream()
-                .map(column -> column.getName() + ": " + column.getColumnType())
-                .collect(Collectors.joining(", "));
-
-        List<String> lines = new ArrayList<>();
-
-        lines.add(header);
-        tableImpl.getRows().stream()
-                .map(Row::print)
-                .forEach(lines::add);
-        Files.write(filePath, lines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        Files.writeString(filePath, tableImpl.toString(),
+                StandardOpenOption.TRUNCATE_EXISTING);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

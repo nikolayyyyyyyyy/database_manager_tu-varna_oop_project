@@ -19,4 +19,9 @@ public class ColumnImpl implements Column {
     public ColumnType getColumnType() {
         return this.type;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Name: %s, Type: %s",this.name,this.type);
+    }
 }

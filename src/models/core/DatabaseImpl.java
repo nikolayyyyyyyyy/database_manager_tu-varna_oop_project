@@ -4,19 +4,21 @@ import interfaces.Column;
 import interfaces.FileManage;
 import interfaces.Row;
 import interfaces.Table;
-import models.common.BaseFileValidator;
 import models.common.TextFileManager;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 
 public class DatabaseImpl implements interfaces.Database {
     private final Map<String, Table> tables;
     private final Map<String,String> help;
     private final FileManage fileManage;
+    private final Path base;
 
     public DatabaseImpl() {
         this.tables = new LinkedHashMap<>();
         this.fileManage = new TextFileManager();
+        this.base = Path.of("catalog");
 
         this.help = Map.of("open <file>", "opens the given file",
                 "close <file>", "closes the given file",
@@ -58,7 +60,7 @@ public class DatabaseImpl implements interfaces.Database {
     @Override
     public void openTable(String fileName) throws IOException {
         Table tableImpl = fileManage
-                .readFile(BaseFileValidator.getBase(), fileName);
+                .readFile(this.base, fileName);
 
         if (this.tables.containsKey(tableImpl.getName())) {
 
@@ -95,7 +97,7 @@ public class DatabaseImpl implements interfaces.Database {
 
     @Override
     public void saveTable(String tableName) throws IOException {
-        this.fileManage.writeFile(BaseFileValidator.getBase(),
+        this.fileManage.writeFile(this.base,
                 this.tables.get(tableName));
 
         this.closeTable(tableName);
@@ -103,14 +105,14 @@ public class DatabaseImpl implements interfaces.Database {
 
     @Override
     public void saveTableAs(String oldFileName, String newFileName) throws IOException {
-        if(BaseFileValidator.isFileExist(newFileName)){
+        if(this.base.resolve(newFileName).toFile().exists()){
 
             throw new DomainException("Name is already existing.");
         }
         Table tableImpl = this.tables.get(oldFileName);
 
         tableImpl.rename(newFileName + ".txt");
-        this.fileManage.writeFile(BaseFileValidator.getBase(), tableImpl);
+        this.fileManage.writeFile(this.base, tableImpl);
         this.closeTable(oldFileName);
     }
 
@@ -137,10 +139,10 @@ public class DatabaseImpl implements interfaces.Database {
                     second.getRows()) {
 
                 if(firstTableRow
-                        .getAttributeFromColumn(first.getColumns().get(firstColIndex))
-                        .equals(secondTableRow.getAttributeFromColumn(second.getColumns().get(secondColIndex)))){
+                        .getAttributes().get(first.getColumns().get(firstColIndex))
+                        .equals(secondTableRow.getAttributes().get(second.getColumns().get(secondColIndex)))){
 
-                    String row = firstTableRow.print() + " " + secondTableRow.print();
+                    String row = firstTableRow + " " + secondTableRow;
                     joinedTable.addRow(row.split(" "));
                 }
             }

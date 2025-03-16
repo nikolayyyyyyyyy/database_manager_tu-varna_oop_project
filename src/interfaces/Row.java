@@ -1,9 +1,7 @@
 package interfaces;
+import java.util.Map;
 
 public interface Row {
 
-    void addAttribute(Column column,String attribute);
-    String getAttributeFromColumn(Column column);
-    String print();
-    String describe();
+    Map<Column,String> getAttributes();
 }

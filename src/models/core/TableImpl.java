@@ -3,7 +3,6 @@ import exception.DomainException;
 import interfaces.Column;
 import interfaces.Row;
 import interfaces.Table;
-import models.common.BaseFileValidator;
 import models.common.MessageLogger;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,8 +52,8 @@ public class TableImpl implements Table {
 
         List<Row> matchedRows = this.rows
                 .stream()
-                .filter(r -> r.getAttributeFromColumn(searchedColumn).equals(value)
-                && !r.getAttributeFromColumn(searchedColumn).equals("Null"))
+                .filter(r -> r.getAttributes().get(searchedColumn).equals(value)
+                && !r.getAttributes().get(searchedColumn).equals("Null"))
                 .collect(Collectors.toList());
 
         if(matchedRows.isEmpty()){
@@ -66,26 +65,26 @@ public class TableImpl implements Table {
         if(columnOperation == ColumnOperation.MAXIMUM){
             result = matchedRows
                     .stream()
-                    .mapToDouble(r -> Double.parseDouble(r.getAttributeFromColumn(targetColumn)))
+                    .mapToDouble(r -> Double.parseDouble(r.getAttributes().get(targetColumn)))
                     .max()
                     .orElseThrow();
         } else if(columnOperation == ColumnOperation.MINIMUM){
 
             result = matchedRows
                     .stream()
-                    .mapToDouble(r -> Double.parseDouble(r.getAttributeFromColumn(targetColumn)))
+                    .mapToDouble(r -> Double.parseDouble(r.getAttributes().get(targetColumn)))
                     .min()
                     .orElseThrow();
         } else if(columnOperation == ColumnOperation.PRODUCT){
 
             result = matchedRows.stream()
-                    .mapToDouble(row -> Double.parseDouble(row.getAttributeFromColumn(targetColumn)))
+                    .mapToDouble(row -> Double.parseDouble(row.getAttributes().get(targetColumn)))
                     .reduce(1, (a, b) -> a * b);
         } else if(columnOperation == ColumnOperation.SUM){
 
             result = matchedRows
                     .stream()
-                    .mapToDouble(r -> Double.parseDouble(r.getAttributeFromColumn(targetColumn)))
+                    .mapToDouble(r -> Double.parseDouble(r.getAttributes().get(targetColumn)))
                     .sum();
         } else {
 
@@ -104,11 +103,7 @@ public class TableImpl implements Table {
 
         for (Column column :
                 this.columns) {
-            stringBuilder
-                    .append(column.getName())
-                    .append(": ")
-                    .append(column.getColumnType())
-                    .append(", ");
+            stringBuilder.append(column).append("\n");
         }
 
         return stringBuilder.toString().trim().replaceAll(",$", "");
@@ -135,7 +130,7 @@ public class TableImpl implements Table {
                 .get(columnIndex);
 
         List<Row> selectedRows = this.rows.stream()
-                .filter(r -> r.getAttributeFromColumn(column).equals(value))
+                .filter(r -> r.getAttributes().get(column).equals(value))
                 .collect(Collectors.toList());
 
         if(selectedRows.isEmpty()){
@@ -154,7 +149,7 @@ public class TableImpl implements Table {
         if(!rows.isEmpty()) {
             for (Row row :
                     this.rows) {
-                row.addAttribute(column,"Null");
+                row.getAttributes().put(column,"Null");
             }
         }
     }
@@ -170,7 +165,7 @@ public class TableImpl implements Table {
         Column column1 = this.columns.get(targetIndex);
 
         List<Row> rows = this.rows
-                .stream().filter(r -> r.getAttributeFromColumn(column).equals(oldValue))
+                .stream().filter(r -> r.getAttributes().get(column).equals(oldValue))
                 .collect(Collectors.toList());
 
         if(rows.isEmpty()){
@@ -179,7 +174,7 @@ public class TableImpl implements Table {
 
         for (Row row :
                 rows) {
-            row.addAttribute(column1,newValue);
+            row.getAttributes().put(column1,newValue);
         }
         return String.format("%d rows affected.",rows.size());
     }
@@ -192,10 +187,10 @@ public class TableImpl implements Table {
         }
         Column column = this.columns.get(index);
 
-        if(this.rows.stream().anyMatch(r -> r.getAttributeFromColumn(column).equals(value))){
+        if(this.rows.stream().anyMatch(r ->  r.getAttributes().get(column).equals(value))){
 
             List<Row> roesToDelete = this.rows.stream()
-                    .filter(r -> r.getAttributeFromColumn(column).equals(value))
+                    .filter(r -> r.getAttributes().get(column).equals(value))
                     .collect(Collectors.toList());
 
             this.rows.removeAll(roesToDelete);
@@ -215,7 +210,7 @@ public class TableImpl implements Table {
             RowImpl row = new RowImpl();
             for(int i = 0; i < values.length; i++) {
 
-                row.addAttribute(this.columns.get(i),values[i]);
+                row.getAttributes().put(this.columns.get(i),values[i]);
             }
             this.rows.add(row);
         }
@@ -223,12 +218,7 @@ public class TableImpl implements Table {
 
     @Override
     public void rename(String name) {
-        if(BaseFileValidator.isFileExist(name)){
-
-            throw new DomainException("File with this name already exist.");
-        } else {
-            this.name = name;
-        }
+        this.name = name;
     }
 
     @Override
@@ -241,7 +231,7 @@ public class TableImpl implements Table {
         Column column = this.columns.get(index);
         return (int)this.rows
                 .stream()
-                .filter(r -> r.getAttributeFromColumn(column).equals(value))
+                .filter(r -> r.getAttributes().get(column).equals(value))
                 .count();
     }
 
@@ -260,7 +250,7 @@ public class TableImpl implements Table {
 
             for (Row row :
                     all.get(i)) {
-                stringBuilder.append(row.describe()).append("\n");
+                stringBuilder.append(row).append("\n");
             }
 
             MessageLogger.log(stringBuilder.toString().trim());
@@ -295,5 +285,18 @@ public class TableImpl implements Table {
                 command = scanner.nextLine();
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        this.columns.forEach(c -> stringBuilder.append(c).append(", "));
+        this.rows.forEach(r -> stringBuilder.append(r).append("\n"));
+
+        return stringBuilder
+                .toString()
+                .trim()
+                .replaceAll(",$", "");
     }
 }
