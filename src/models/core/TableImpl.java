@@ -291,12 +291,18 @@ public class TableImpl implements Table {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        this.columns.forEach(c -> stringBuilder.append(c).append(", "));
+        for (int i = 0; i < this.columns.size(); i++){
+            if(i != this.columns.size() - 1){
+                stringBuilder.append(this.columns.get(i)).append(", ");
+                continue;
+            }
+            stringBuilder.append(this.columns.get(i)).append("\n");
+        }
+
         this.rows.forEach(r -> stringBuilder.append(r).append("\n"));
 
         return stringBuilder
                 .toString()
-                .trim()
-                .replaceAll(",$", "");
+                .trim();
     }
 }

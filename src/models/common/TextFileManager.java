@@ -1,4 +1,5 @@
 package models.common;
+import interfaces.Column;
 import interfaces.FileManage;
 import interfaces.Table;
 import models.core.ColumnImpl;
@@ -10,36 +11,45 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TextFileManager implements FileManage {
 
     @Override
     public Table readFile(Path basePath, String fileName) throws IOException {
         Path filePath = basePath.resolve(fileName);
-
         if (!filePath.toFile().exists()) {
+
             Files.createFile(filePath);
             return new TableImpl(fileName);
         }
-
-        List<String> rows = Files.readAllLines(filePath);
         Table table = new TableImpl(fileName);
 
-        if (rows.isEmpty()) {
+        List<String> all = Files.readAllLines(filePath);
+        if (all.isEmpty()) {
             return table;
         }
 
-        String[] columnPairs = rows.get(0).split(", ");
+        String[] columnPairs = all.get(0).split(", ");
+        for (int i = 0; i < columnPairs.length; i += 2) {
+            String name = columnPairs[i].split(": ")[1].trim();
+            String type = columnPairs[i + 1].split(": ")[1].trim();
+            Column column = new ColumnImpl(name,ColumnType.valueOf(type));
 
-        Arrays.stream(columnPairs)
-                .map(pair -> pair.split(": "))
-                .map(parts -> new ColumnImpl(parts[0], ColumnType.valueOf(parts[1])))
-                .forEach(table::addColumn);
+            table.addColumn(column);
+        }
+        
+        List<String> rows = all.stream().skip(1).collect(Collectors.toList());
 
-        rows.stream()
-                .skip(1)
-                .map(record -> record.split(" "))
-                .forEach(table::addRow);
+        for (String row :
+                rows) {
+            String[] records = Arrays.stream(row.split(", "))
+                    .map(r -> r.split(": "))
+                    .map(sr -> sr[1])
+                            .toArray(String[]::new);
+
+            table.addRow(records);
+        }
 
         return table;
     }

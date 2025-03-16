@@ -110,8 +110,8 @@ public class DatabaseImpl implements interfaces.Database {
             throw new DomainException("Name is already existing.");
         }
         Table tableImpl = this.tables.get(oldFileName);
+        tableImpl.rename(newFileName);
 
-        tableImpl.rename(newFileName + ".txt");
         this.fileManage.writeFile(this.base, tableImpl);
         this.closeTable(oldFileName);
     }
