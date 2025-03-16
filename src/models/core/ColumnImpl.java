@@ -1,6 +1,5 @@
 package models.core;
 import interfaces.Column;
-import java.util.*;
 
 public class ColumnImpl implements Column {
     private final String name;
@@ -19,18 +18,5 @@ public class ColumnImpl implements Column {
     @Override
     public ColumnType getColumnType() {
         return this.type;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ColumnImpl columnImpl = (ColumnImpl) o;
-        return Objects.equals(name, columnImpl.name) && type == columnImpl.type;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, type);
     }
 }

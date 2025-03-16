@@ -22,6 +22,21 @@ public class TableImpl implements Table {
     }
 
     @Override
+    public List<Row> getRows() {
+        return this.rows;
+    }
+
+    @Override
+    public List<Column> getColumns() {
+        return this.columns;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
     public double aggregate(int columnIndex, String value,int targetColumnIndex ,ColumnOperation columnOperation) {
         if(columnIndex >= this.columns.size()
         || targetColumnIndex >= this.columns.size()){
@@ -79,21 +94,6 @@ public class TableImpl implements Table {
     }
 
     @Override
-    public List<Row> getRows() {
-        return this.rows;
-    }
-
-    @Override
-    public List<Column> getColumns() {
-        return this.columns;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
     public String printColumnTypes() {
         if(this.columns.isEmpty()){
 
@@ -148,10 +148,6 @@ public class TableImpl implements Table {
 
     @Override
     public void addColumn(Column column) {
-        if (this.columns.contains(column)){
-
-            throw new DomainException("Column already exist");
-        }
         this.columns.add(column);
 
         if(!rows.isEmpty()) {
@@ -260,10 +256,12 @@ public class TableImpl implements Table {
         for(int i = 0; i < all.size(); i++){
             MessageLogger.log("---------------------------------------");
             StringBuilder stringBuilder = new StringBuilder();
+
             for (Row row :
                     all.get(i)) {
                 stringBuilder.append(row.describe()).append("\n");
             }
+
             MessageLogger.log(stringBuilder.toString().trim());
             String command = scanner.nextLine();
 
@@ -277,7 +275,7 @@ public class TableImpl implements Table {
                         break;
                     }
                 } else if (Objects.equals(command, "previous")) {
-                    if (i - 1 < 0) {
+                    if (i == 0) {
 
                         MessageLogger.log("This is page 1.");
                     } else {

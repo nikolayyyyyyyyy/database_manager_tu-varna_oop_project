@@ -1,6 +1,8 @@
 package models.core;
 import exception.DomainException;
+import interfaces.Column;
 import interfaces.FileManage;
+import interfaces.Row;
 import interfaces.Table;
 import models.common.BaseFileValidator;
 import models.common.TextFileManager;
@@ -115,6 +117,37 @@ public class DatabaseImpl implements interfaces.Database {
     @Override
     public String innerJoinTables(String firstTable, int firstColIndex,
                                   String secondTable, int secondColIndex) {
-        return "";
+        Table first = this.tables.get(firstTable);
+        Table second = this.tables.get(secondTable);
+
+        List<Column> columns = new ArrayList<>();
+        columns.addAll(first.getColumns());
+        columns.addAll(second.getColumns());
+
+        Table joinedTable = new TableImpl(firstTable + "_" + secondTable);
+        for (Column column :
+                columns) {
+            joinedTable.addColumn(column);
+        }
+
+        for (Row firstTableRow :
+                first.getRows()) {
+
+            for (Row secondTableRow :
+                    second.getRows()) {
+
+                if(firstTableRow
+                        .getAttributeFromColumn(first.getColumns().get(firstColIndex))
+                        .equals(secondTableRow.getAttributeFromColumn(second.getColumns().get(secondColIndex)))){
+
+                    String row = firstTableRow.print() + " " + secondTableRow.print();
+                    joinedTable.addRow(row.split(" "));
+                }
+            }
+        }
+
+        this.tables.put(joinedTable.getName(),joinedTable);
+
+        return joinedTable.getName();
     }
 }

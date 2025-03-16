@@ -69,5 +69,6 @@ public class DatabaseEngine implements Engine {
         commands.put("save", new SaveCommand(this.database));
         commands.put("exit", new ExitCommand());
         commands.put("aggregate",new AggregateCommand(this.database));
+        commands.put("innerjoin",new JoinCommand(this.database));
     }
 }
