@@ -6,6 +6,9 @@ import interfaces.Table;
 import models.common.MessageLogger;
 import models.enums.ColumnOperation;
 import models.enums.ColumnType;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -162,8 +165,14 @@ public class TableImpl implements Table {
     }
 
     @Override
-    public void rename(String name) {
-        this.name = name;
+    public void rename(Path directory, String name) {
+        if(Files.notExists(directory.resolve(name))) {
+
+            this.name = name;
+        } else {
+
+            throw new DomainException("Table with this name already exist");
+        }
     }
 
     @Override

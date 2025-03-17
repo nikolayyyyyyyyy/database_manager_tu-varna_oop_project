@@ -26,6 +26,10 @@ public class DatabaseImpl implements interfaces.Database {
                 "help","prints this information",
                 "exit","exists the program");
     }
+    @Override
+    public Path getBase(){
+        return this.base;
+    }
 
     @Override
     public String printHelp(){

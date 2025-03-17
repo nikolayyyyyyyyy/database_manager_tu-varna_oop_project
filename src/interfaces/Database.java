@@ -1,7 +1,9 @@
 package interfaces;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public interface Database {
+    Path getBase();
     void openTable(String fileName) throws IOException;
     String printTables();
     void closeTable(String fileName);

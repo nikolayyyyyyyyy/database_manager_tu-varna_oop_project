@@ -24,17 +24,11 @@ public class UpdateCommand implements Command {
         int targetColumnIndex = Integer.parseInt(command[3]);
         String targetValue = command[4];
 
-        try {
-            Table tableImpl = this.database.getTable(tableName);
+        Table tableImpl = this.database.getTable(tableName);
 
-            MessageLogger.log(tableImpl.updateRowValueAtIndexWhereContainsAt(columnIndex,
-                    targetColumnIndex,
-                    searchedValue,
-                    targetValue));
-
-        }catch (DomainException e){
-
-            MessageLogger.log(e.getMessage());
-        }
+        MessageLogger.log(tableImpl.updateRowValueAtIndexWhereContainsAt(columnIndex,
+                targetColumnIndex,
+                searchedValue,
+                targetValue));
     }
 }

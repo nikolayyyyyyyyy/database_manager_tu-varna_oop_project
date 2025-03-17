@@ -22,13 +22,8 @@ public class RenameCommand implements Command {
         String tableName = command[0];
         String newTableName = command[1];
 
-        try {
 
-            Table tableImpl = this.database.getTable(tableName);
-            tableImpl.rename(newTableName);
-        }catch (DomainException exception){
-
-            MessageLogger.log(exception.getMessage());
-        }
+        Table tableImpl = this.database.getTable(tableName);
+        tableImpl.rename(this.database.getBase(),newTableName);
     }
 }

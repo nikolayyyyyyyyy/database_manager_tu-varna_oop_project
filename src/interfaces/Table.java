@@ -1,5 +1,7 @@
 package interfaces;
 import models.enums.ColumnOperation;
+
+import java.nio.file.Path;
 import java.util.List;
 
 public interface Table {
@@ -15,6 +17,6 @@ public interface Table {
     String updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue,String newValue);
     String deleteTableWhereRowContainsAt(int index,String value);
     void addRow(String[] values);
-    void rename(String name);
+    void rename(Path directory, String name);
     int getCountRowsContainAt(int index,String value);
 }

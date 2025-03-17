@@ -23,12 +23,6 @@ public class JoinCommand implements Command {
         String secondTable = command[2];
         int secondColumnIndex = Integer.parseInt(command[3]);
 
-        try {
-
-            MessageLogger.log(this.database.innerJoinTables(firstTable,firstColumnIndex,secondTable,secondColumnIndex));
-        }catch (DomainException exception){
-
-            MessageLogger.log(exception.getMessage());
-        }
+        MessageLogger.log(this.database.innerJoinTables(firstTable,firstColumnIndex,secondTable,secondColumnIndex));
     }
 }
