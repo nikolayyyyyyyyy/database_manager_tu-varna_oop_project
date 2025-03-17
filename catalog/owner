@@ -1,0 +1,6 @@
+Name: owner_id, Type: INTEGER, Name: owner_name, Type: STRING, Name: auto_id, Type: INTEGER
+owner_id: 1, owner_name: Nikolay, auto_id: 1
+owner_id: 2, owner_name: Kristiqn, auto_id: Null
+owner_id: 3, owner_name: Atanas, auto_id: Null
+owner_id: 4, owner_name: Maria, auto_id: Null
+owner_id: 5, owner_name: Genoveva, auto_id: Null
