@@ -1,6 +1,0 @@
-Name: car_id, Type: INTEGER, Name: car_model, Type: STRING
-car_id: 1, car_model: AUDI
-car_id: 2, car_model: BMW
-car_id: 3, car_model: Opel
-car_id: 4, car_model: Jaguar
-car_id: 5, car_model: Mercedes

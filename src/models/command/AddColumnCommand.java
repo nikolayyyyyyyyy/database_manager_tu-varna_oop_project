@@ -17,7 +17,7 @@ public class AddColumnCommand implements Command {
 
     @Override
     public void execute(String... command) {
-        if(command.length != 2){
+        if(command.length != 3){
             throw new DomainException("For adding needs 2 parameters");
         }
 

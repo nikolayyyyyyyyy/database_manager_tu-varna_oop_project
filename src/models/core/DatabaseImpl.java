@@ -121,7 +121,7 @@ public class DatabaseImpl implements interfaces.Database {
         }
 
         Table tableImpl = this.tables.get(oldFileName);
-        tableImpl.rename(newFileName);
+        tableImpl.rename(this.base,newFileName);
 
         this.fileManage.writeFile(this.base, tableImpl);
         this.closeTable(oldFileName);
