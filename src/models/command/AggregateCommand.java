@@ -4,7 +4,7 @@ import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
 import models.common.MessageLogger;
-import models.core.ColumnOperation;
+import models.enums.ColumnOperation;
 
 public class AggregateCommand implements Command {
     private final Database database;

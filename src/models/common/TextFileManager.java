@@ -3,7 +3,7 @@ import interfaces.Column;
 import interfaces.FileManage;
 import interfaces.Table;
 import models.core.ColumnImpl;
-import models.core.ColumnType;
+import models.enums.ColumnType;
 import models.core.TableImpl;
 import java.io.IOException;
 import java.nio.file.Files;

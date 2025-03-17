@@ -1,11 +1,10 @@
 package models.command;
 
-import exception.DomainException;
+import models.exception.DomainException;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
 import models.common.MessageLogger;
-import models.core.TableImpl;
 
 public class RenameCommand implements Command {
     private final Database database;

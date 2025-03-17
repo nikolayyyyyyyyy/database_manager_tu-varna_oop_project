@@ -1,5 +1,6 @@
 package models.core;
 import interfaces.Column;
+import models.enums.ColumnType;
 
 public class ColumnImpl implements Column {
     private final String name;

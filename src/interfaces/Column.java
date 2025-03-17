@@ -1,5 +1,5 @@
 package interfaces;
-import models.core.ColumnType;
+import models.enums.ColumnType;
 
 public interface Column {
 

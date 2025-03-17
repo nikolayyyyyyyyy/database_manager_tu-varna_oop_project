@@ -1,9 +1,12 @@
 package models.core;
-import exception.DomainException;
+import models.exception.DomainException;
 import interfaces.Column;
 import interfaces.Row;
 import interfaces.Table;
 import models.common.MessageLogger;
+import models.enums.ColumnOperation;
+import models.enums.ColumnType;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,7 +39,7 @@ public class TableImpl implements Table {
     }
 
     @Override
-    public double aggregate(int columnIndex, String value,int targetColumnIndex ,ColumnOperation columnOperation) {
+    public double aggregate(int columnIndex, String value, int targetColumnIndex , ColumnOperation columnOperation) {
         if(columnIndex >= this.columns.size()
         || targetColumnIndex >= this.columns.size()){
 
@@ -158,7 +161,7 @@ public class TableImpl implements Table {
     public String updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue, String newValue) {
         if(index > this.columns.size() || targetIndex > this.columns.size()){
 
-            throw new DomainException("Index out of range exception");
+            throw new DomainException("Index out of range models.exception");
         }
 
         Column column = this.columns.get(index);

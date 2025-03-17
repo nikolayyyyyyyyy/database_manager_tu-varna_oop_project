@@ -1,4 +1,4 @@
-package exception;
+package models.exception;
 
 public class DomainException extends RuntimeException {
     public DomainException(String message) {

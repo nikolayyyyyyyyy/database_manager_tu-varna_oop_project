@@ -1,5 +1,5 @@
 package interfaces;
-import models.core.ColumnOperation;
+import models.enums.ColumnOperation;
 import java.util.List;
 
 public interface Table {

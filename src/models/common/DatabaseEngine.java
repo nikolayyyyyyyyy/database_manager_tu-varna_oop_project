@@ -1,5 +1,5 @@
 package models.common;
-import exception.DomainException;
+import models.exception.DomainException;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Engine;

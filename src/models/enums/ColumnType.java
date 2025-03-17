@@ -1,4 +1,4 @@
-package models.core;
+package models.enums;
 
 public enum ColumnType {
     STRING,

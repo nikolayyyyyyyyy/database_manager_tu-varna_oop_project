@@ -1,5 +1,5 @@
 package models.core;
-import exception.DomainException;
+import models.exception.DomainException;
 import interfaces.Column;
 import interfaces.FileManage;
 import interfaces.Row;

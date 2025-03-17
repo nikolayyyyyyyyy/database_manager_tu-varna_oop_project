@@ -5,7 +5,7 @@ import interfaces.Database;
 import interfaces.Table;
 import models.common.MessageLogger;
 import models.core.ColumnImpl;
-import models.core.ColumnType;
+import models.enums.ColumnType;
 
 public class AddColumnCommand implements Command {
     private final Database database;
