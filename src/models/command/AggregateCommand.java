@@ -5,6 +5,7 @@ import interfaces.Database;
 import interfaces.Table;
 import models.common.MessageLogger;
 import models.enums.ColumnOperation;
+import models.exception.DomainException;
 
 public class AggregateCommand implements Command {
     private final Database database;
@@ -15,6 +16,10 @@ public class AggregateCommand implements Command {
 
     @Override
     public void execute(String... command) {
+        if(command.length != 5){
+            throw new DomainException("For aggregating command are required 5 arguments.");
+        }
+
         String tableName = command[0];
         int searchedColumn = Integer.parseInt(command[1]);
         String value = command[2];

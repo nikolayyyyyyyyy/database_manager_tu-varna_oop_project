@@ -14,6 +14,10 @@ public class JoinCommand implements Command {
 
     @Override
     public void execute(String... command) {
+        if(command.length != 4){
+            throw new DomainException("For joining command are required 4 args.");
+        }
+
         String firstTable = command[0];
         int firstColumnIndex = Integer.parseInt(command[1]);
         String secondTable = command[2];

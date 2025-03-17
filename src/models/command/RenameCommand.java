@@ -15,6 +15,10 @@ public class RenameCommand implements Command {
 
     @Override
     public void execute(String... command) {
+        if(command.length != 2){
+            throw new DomainException("For rename command are required 2 args.");
+        }
+
         String tableName = command[0];
         String newTableName = command[1];
 

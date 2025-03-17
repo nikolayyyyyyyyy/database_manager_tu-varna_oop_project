@@ -3,6 +3,7 @@ package models.command;
 import interfaces.Command;
 import interfaces.Database;
 import models.common.MessageLogger;
+import models.exception.DomainException;
 
 import java.io.IOException;
 
@@ -15,6 +16,11 @@ public class SaveAsCommand implements Command {
 
     @Override
     public void execute(String... command) {
+        if(command.length != 2){
+
+            throw new DomainException("For saving as command are required 2 args.");
+        }
+
         String tableName = command[0];
         String newTableName = command[1];
 

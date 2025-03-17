@@ -4,6 +4,7 @@ import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
 import models.common.MessageLogger;
+import models.exception.DomainException;
 
 public class DeleteCommand implements Command {
     private final Database database;
@@ -14,6 +15,10 @@ public class DeleteCommand implements Command {
 
     @Override
     public void execute(String... command) {
+        if(command.length != 3){
+            throw new DomainException("For deleting command are required 3 args.");
+        }
+
         String tableName = command[0];
         int columnIndex = Integer.parseInt(command[1]);
         String searchedValue = command[2];

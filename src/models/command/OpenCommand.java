@@ -2,6 +2,7 @@ package models.command;
 import interfaces.Command;
 import interfaces.Database;
 import models.common.MessageLogger;
+import models.exception.DomainException;
 
 import java.io.IOException;
 
@@ -14,6 +15,10 @@ public class OpenCommand implements Command {
 
     @Override
     public void execute(String... command) {
+        if(command.length != 1){
+            throw new DomainException("For open command are required 1 arg.");
+        }
+
         String tableName = command[0];
         try {
 
