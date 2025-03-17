@@ -58,6 +58,10 @@ public class TextFileManager implements FileManage {
     public void writeFile(Path baseDirectory, Table tableImpl) throws IOException {
         Path filePath = baseDirectory.resolve(tableImpl.getName());
 
+        if(!filePath.toFile().exists()){
+            Files.createFile(filePath);
+        }
+
         Files.writeString(filePath, tableImpl.toString(),
                 StandardOpenOption.TRUNCATE_EXISTING);
     }

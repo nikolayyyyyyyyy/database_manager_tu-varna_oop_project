@@ -1,6 +1,5 @@
 package models.core;
 import models.exception.DomainException;
-import interfaces.Column;
 import interfaces.FileManage;
 import interfaces.Row;
 import interfaces.Table;
@@ -64,10 +63,10 @@ public class DatabaseImpl implements interfaces.Database {
 
         if (this.tables.containsKey(tableImpl.getName())) {
 
-            throw new DomainException(String.format("Table %s is already opened. ", fileName.replace(".txt","")));
+            throw new DomainException(String.format("Table %s is already opened. ", fileName));
         }
 
-        this.tables.put(tableImpl.getName().replace(".txt",""), tableImpl);
+        this.tables.put(tableImpl.getName(), tableImpl);
     }
 
     @Override
@@ -88,27 +87,35 @@ public class DatabaseImpl implements interfaces.Database {
     public void closeTable(String fileName) {
         if(!this.tables.containsKey(fileName)){
 
-            throw new DomainException(String.format("Table %s is not loaded.",fileName.replace(".txt","")));
-        } else {
-
-            this.tables.remove(fileName);
+            throw new DomainException(String.format("Table %s is not loaded.",fileName));
         }
+        this.tables.remove(fileName);
     }
 
     @Override
     public void saveTable(String tableName) throws IOException {
+        if(!this.tables.containsKey(tableName)){
+
+            throw new DomainException(String.format("Table %s is not loaded.",tableName));
+        }
+
         this.fileManage.writeFile(this.base,
                 this.tables.get(tableName));
-
         this.closeTable(tableName);
     }
 
     @Override
     public void saveTableAs(String oldFileName, String newFileName) throws IOException {
+        if(!this.tables.containsKey(oldFileName)){
+
+            throw new DomainException(String.format("Table %s is not loaded.",oldFileName));
+        }
+
         if(this.base.resolve(newFileName).toFile().exists()){
 
             throw new DomainException("Name is already existing.");
         }
+
         Table tableImpl = this.tables.get(oldFileName);
         tableImpl.rename(newFileName);
 
@@ -119,18 +126,30 @@ public class DatabaseImpl implements interfaces.Database {
     @Override
     public String innerJoinTables(String firstTable, int firstColIndex,
                                   String secondTable, int secondColIndex) {
-        Table first = this.tables.get(firstTable);
-        Table second = this.tables.get(secondTable);
+        if(!this.tables.containsKey(firstTable)){
 
-        List<Column> columns = new ArrayList<>();
-        columns.addAll(first.getColumns());
-        columns.addAll(second.getColumns());
+            throw new DomainException(String.format("Table %s is not loaded.",firstTable));
+        }
+
+        if(!this.tables.containsKey(secondTable)){
+
+            throw new DomainException(String.format("Table %s is not loaded.",secondTable));
+        }
+
+        Table first = this.tables.get(firstTable);
+        if(firstColIndex >= first.getColumns().size() || firstColIndex < 0){
+
+            throw new DomainException("First column index is out of bounds");
+        }
+
+        Table second = this.tables.get(secondTable);
+        if(secondColIndex >= second.getColumns().size() || secondColIndex < 0){
+            throw new DomainException("Second column index is out of bounds");
+        }
 
         Table joinedTable = new TableImpl(firstTable + "_" + secondTable);
-        for (Column column :
-                columns) {
-            joinedTable.addColumn(column);
-        }
+        joinedTable.getColumns().addAll(first.getColumns());
+        joinedTable.getColumns().addAll(second.getColumns());
 
         for (Row firstTableRow :
                 first.getRows()) {
@@ -142,8 +161,11 @@ public class DatabaseImpl implements interfaces.Database {
                         .getAttributes().get(first.getColumns().get(firstColIndex))
                         .equals(secondTableRow.getAttributes().get(second.getColumns().get(secondColIndex)))){
 
-                    String row = firstTableRow + " " + secondTableRow;
-                    joinedTable.addRow(row.split(" "));
+                    String row = firstTableRow + ", " + secondTableRow;
+                    joinedTable.addRow(Arrays.stream(row.split(", "))
+                            .map(r -> r.split(": "))
+                            .map(sr -> sr[1])
+                            .toArray(String[]::new));
                 }
             }
         }
