@@ -1,5 +1,4 @@
 package models.command;
-
 import interfaces.Command;
 import models.common.MessageLogger;
 
