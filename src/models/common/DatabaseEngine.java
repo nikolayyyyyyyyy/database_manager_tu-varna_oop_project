@@ -41,11 +41,11 @@ public class DatabaseEngine implements Engine {
                             .toArray(String[]::new));
                 }catch (DomainException exception){
 
-                    System.out.println(exception.getMessage());
+                    MessageLogger.log(exception.getMessage());
                 }
             } else {
 
-                System.out.println("Invalid command!");
+                MessageLogger.log("Invalid command!");
             }
         }
     }
