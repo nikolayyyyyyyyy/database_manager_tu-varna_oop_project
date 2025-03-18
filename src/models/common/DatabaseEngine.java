@@ -5,6 +5,7 @@ import interfaces.Database;
 import interfaces.Engine;
 import models.command.*;
 import models.core.DatabaseImpl;
+import java.io.IOException;
 import java.util.*;
 
 public class DatabaseEngine implements Engine {
@@ -24,6 +25,7 @@ public class DatabaseEngine implements Engine {
     @Override
     public void run()  {
         Command command;
+        TextFileManager.createBaseDirectoryIfNotExist();
 
         while(true){
 
@@ -39,7 +41,7 @@ public class DatabaseEngine implements Engine {
                             .stream(arguments)
                             .skip(1)
                             .toArray(String[]::new));
-                }catch (DomainException exception){
+                }catch (DomainException | IOException exception){
 
                     MessageLogger.log(exception.getMessage());
                 }
@@ -56,7 +58,7 @@ public class DatabaseEngine implements Engine {
         commands.put("count", new CountCommand(this.database));
         commands.put("delete", new DeleteCommand(this.database));
         commands.put("describe", new DescribeCommand(this.database));
-        commands.put("help", new HelpCommand(this.database));
+        commands.put("help", new HelpCommand());
         commands.put("insert", new InsertCommand(this.database));
         commands.put("open", new OpenCommand(this.database));
         commands.put("print", new PrintCommand(this.database));

@@ -13,6 +13,6 @@ public class ShowTableCommand implements Command {
     @Override
     public void execute(String... command) {
 
-        MessageLogger.log(this.database.printTables());
+        MessageLogger.log(this.database.printLoadedTables());
     }
 }

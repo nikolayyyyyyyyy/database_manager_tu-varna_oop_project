@@ -6,13 +6,7 @@ import java.nio.file.Path;
 
 public class Application {
 
-    public static void main(String[] args) throws IOException {
-        Path basePath = Path.of("catalog");
-
-        if(Files.notExists(basePath)){
-            Files.createDirectory(basePath);
-        }
-
+    public static void main(String[] args){
         Engine databaseEngine = new DatabaseEngine();
         databaseEngine.run();
     }

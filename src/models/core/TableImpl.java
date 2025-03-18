@@ -6,9 +6,6 @@ import interfaces.Table;
 import models.common.MessageLogger;
 import models.enums.ColumnOperation;
 import models.enums.ColumnType;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -69,7 +66,7 @@ public class TableImpl implements Table {
 
     @Override
     public void selectAllRowsContain(int columnIndex,String value) {
-        if(columnIndex >= this.columns.size()){
+        if(isIndexOutOfRange(columnIndex)){
 
             throw new DomainException("Index out of range!Try again ;)");
         }
@@ -103,12 +100,10 @@ public class TableImpl implements Table {
 
     @Override
     public String updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue, String newValue) {
-        if(index >= this.columns.size()
-                || targetIndex >= this.columns.size() || index < 0 || targetIndex < 0){
+        if(isIndexOutOfRange(index) || isIndexOutOfRange(targetIndex)){
 
-            throw new DomainException("Index out of range models.exception");
+            throw new DomainException("Index out of range.");
         }
-
         Column searchedColumn = this.columns.get(index);
         Column targetColumn = this.columns.get(targetIndex);
 
@@ -129,7 +124,7 @@ public class TableImpl implements Table {
 
     @Override
     public String deleteTableWhereRowContainsAt(int index, String value) {
-        if(index >= this.columns.size()){
+        if(isIndexOutOfRange(index)){
 
             throw new DomainException("There is no column at given index.");
         }
@@ -165,19 +160,13 @@ public class TableImpl implements Table {
     }
 
     @Override
-    public void rename(Path directory, String name) {
-        if(Files.notExists(directory.resolve(name))) {
-
-            this.name = name;
-        } else {
-
-            throw new DomainException("Table with this name already exist");
-        }
+    public void rename(String name) {
+        this.name = name;
     }
 
     @Override
     public int getCountRowsContainAt(int index,String value) {
-        if(index >= this.columns.size() || index < 0){
+        if(isIndexOutOfRange(index)){
 
             throw new DomainException("There is no column at given index.");
         }
@@ -191,8 +180,7 @@ public class TableImpl implements Table {
 
     @Override
     public double aggregate(int columnIndex, String value, int targetColumnIndex , ColumnOperation columnOperation) {
-        if(columnIndex >= this.columns.size()
-        || targetColumnIndex >= this.columns.size() || columnIndex < 0 || targetColumnIndex < 0){
+        if(isIndexOutOfRange(columnIndex) || isIndexOutOfRange(targetColumnIndex)){
 
             throw new DomainException("No column at given index");
         }
@@ -313,5 +301,9 @@ public class TableImpl implements Table {
         return stringBuilder
                 .toString()
                 .trim();
+    }
+
+    private boolean isIndexOutOfRange(int columnIndex) {
+        return columnIndex >= this.columns.size() || columnIndex < 0;
     }
 }

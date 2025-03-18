@@ -2,6 +2,7 @@ package models.command;
 
 import interfaces.Command;
 import interfaces.Database;
+import interfaces.Table;
 import models.exception.DomainException;
 
 public class PrintCommand implements Command {
@@ -18,8 +19,14 @@ public class PrintCommand implements Command {
         }
 
         String tableName = command[0];
-        this.database
-                .getTable(tableName)
-                .printRows();
+        if(!this.database.getLoadedTables().containsKey(tableName)){
+
+            throw new DomainException(String.format("Table %s does not exist.",tableName));
+        }
+
+        Table table =  this.database
+                .getLoadedTables().get(tableName);
+
+        table.printRows();
     }
 }

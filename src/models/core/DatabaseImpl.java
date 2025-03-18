@@ -1,80 +1,23 @@
 package models.core;
 import models.exception.DomainException;
-import interfaces.FileManage;
 import interfaces.Row;
 import interfaces.Table;
-import models.common.TextFileManager;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.*;
 
 public class DatabaseImpl implements interfaces.Database {
     private final Map<String, Table> tables;
-    private final Map<String,String> help;
-    private final FileManage fileManage;
-    private final Path base;
 
     public DatabaseImpl() {
         this.tables = new LinkedHashMap<>();
-        this.fileManage = new TextFileManager();
-        this.base = Path.of("catalog");
-
-        this.help = Map.of("open <file>", "opens the given file",
-                "close <file>", "closes the given file",
-                "save <file>", "saves the given file",
-                "saveas <file>", "saves file in new file",
-                "help","prints this information",
-                "exit","exists the program");
-    }
-    @Override
-    public Path getBase(){
-        return this.base;
     }
 
     @Override
-    public String printHelp(){
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.append("The following command are supported:").append("\n");
-
-        for (String command:
-             this.help.keySet()) {
-
-            stringBuilder
-                    .append(command)
-                    .append("      ")
-                    .append(this.help.get(command))
-                    .append("\n");
-        }
-
-        return stringBuilder.toString().trim();
+    public Map<String,Table> getLoadedTables(){
+        return this.tables;
     }
 
     @Override
-    public Table getTable(String name) {
-        if(!this.tables.containsKey(name)) {
-
-            throw new DomainException(String.format("Table with %s is not loaded ", name));
-        }
-
-        return this.tables.get(name);
-    }
-
-    @Override
-    public void openTable(String fileName) throws IOException {
-        Table tableImpl = fileManage
-                .readFile(this.base, fileName);
-
-        if (this.tables.containsKey(tableImpl.getName())) {
-
-            throw new DomainException(String.format("Table %s is already opened. ", fileName));
-        }
-
-        this.tables.put(tableImpl.getName(), tableImpl);
-    }
-
-    @Override
-    public String printTables() {
+    public String printLoadedTables() {
         StringBuilder sb = new StringBuilder();
         sb.append("Opened tables:").append("\n");
 
@@ -85,46 +28,6 @@ public class DatabaseImpl implements interfaces.Database {
         }
 
         return sb.toString().trim();
-    }
-
-    @Override
-    public void closeTable(String fileName) {
-        if(!this.tables.containsKey(fileName)){
-
-            throw new DomainException(String.format("Table %s is not loaded.",fileName));
-        }
-        this.tables.remove(fileName);
-    }
-
-    @Override
-    public void saveTable(String tableName) throws IOException {
-        if(!this.tables.containsKey(tableName)){
-
-            throw new DomainException(String.format("Table %s is not loaded.",tableName));
-        }
-
-        this.fileManage.writeFile(this.base,
-                this.tables.get(tableName));
-        this.closeTable(tableName);
-    }
-
-    @Override
-    public void saveTableAs(String oldFileName, String newFileName) throws IOException {
-        if(!this.tables.containsKey(oldFileName)){
-
-            throw new DomainException(String.format("Table %s is not loaded.",oldFileName));
-        }
-
-        if(this.base.resolve(newFileName).toFile().exists()){
-
-            throw new DomainException("Name is already existing.");
-        }
-
-        Table tableImpl = this.tables.get(oldFileName);
-        tableImpl.rename(this.base,newFileName);
-
-        this.fileManage.writeFile(this.base, tableImpl);
-        this.closeTable(oldFileName);
     }
 
     @Override

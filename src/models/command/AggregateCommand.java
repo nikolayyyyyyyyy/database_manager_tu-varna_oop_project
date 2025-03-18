@@ -21,12 +21,18 @@ public class AggregateCommand implements Command {
         }
 
         String tableName = command[0];
-        int searchedColumn = Integer.parseInt(command[1]);
+        if(!this.database.getLoadedTables().containsKey(tableName)){
+
+            throw new DomainException("Table %s does not exist.");
+        }
+
+        int searchedColumnIndex = Integer.parseInt(command[1]);
         String value = command[2];
+
         int targetColumnIndex = Integer.parseInt(command[3]);
         ColumnOperation operation = ColumnOperation.valueOf(command[4]);
 
-        Table table = this.database.getTable(tableName);
-        MessageLogger.log(table.aggregate(searchedColumn,value,targetColumnIndex,operation));
+        Table table = this.database.getLoadedTables().get(tableName);
+        MessageLogger.log(table.aggregate(searchedColumnIndex,value,targetColumnIndex,operation));
     }
 }

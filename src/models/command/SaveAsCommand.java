@@ -1,17 +1,19 @@
 package models.command;
-
 import interfaces.Command;
 import interfaces.Database;
+import interfaces.FileManage;
+import interfaces.Table;
 import models.common.MessageLogger;
+import models.common.TextFileManager;
 import models.exception.DomainException;
-
-import java.io.IOException;
 
 public class SaveAsCommand implements Command {
     private final Database database;
+    private final FileManage fileManage;
 
     public SaveAsCommand(Database database) {
         this.database = database;
+        this.fileManage = new TextFileManager();
     }
 
     @Override
@@ -22,14 +24,21 @@ public class SaveAsCommand implements Command {
         }
 
         String tableName = command[0];
-        String newTableName = command[1];
+        if(!this.database.getLoadedTables().containsKey(tableName)){
 
-        try {
-            this.database.saveTableAs(tableName, newTableName);
-        }catch (IOException e){
-
-            MessageLogger.log( String.format("Cannot save as %s something went wrong",tableName));
-            System.exit(0);
+            throw new DomainException("Table %s is not loaded.");
         }
+
+        Table table = this.database.getLoadedTables().get(tableName);
+
+        String newTableName = command[1];
+        if(this.fileManage.isFileExitsInBase(newTableName)){
+
+            throw new DomainException(String.format("Table with %s name already exist, change it first.",newTableName));
+        }
+        table.rename(newTableName);
+        this.database.getLoadedTables().remove(tableName);
+
+        MessageLogger.log(String.format("Saved table %s as %s",tableName,newTableName));
     }
 }

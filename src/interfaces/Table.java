@@ -17,6 +17,6 @@ public interface Table {
     String updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue,String newValue);
     String deleteTableWhereRowContainsAt(int index,String value);
     void addRow(String[] values);
-    void rename(Path directory, String name);
+    void rename(String name);
     int getCountRowsContainAt(int index,String value);
 }

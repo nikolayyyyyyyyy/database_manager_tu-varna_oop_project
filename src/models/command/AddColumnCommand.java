@@ -22,9 +22,14 @@ public class AddColumnCommand implements Command {
         }
 
         String tableName = command[0];
+        if(!this.database.getLoadedTables().containsKey(tableName)){
+
+            throw new DomainException(String.format("Table %s is not loaded.",tableName));
+        }
+
         Column column = new ColumnImpl(command[1],ColumnType.valueOf(command[2]));
 
-        Table tableImpl = this.database.getTable(tableName);
+        Table tableImpl = this.database.getLoadedTables().get(tableName);
         tableImpl.addColumn(column);
 
         MessageLogger.log("Added column -> ".concat(column.getName()));

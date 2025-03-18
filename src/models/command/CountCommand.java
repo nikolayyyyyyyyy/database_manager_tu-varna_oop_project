@@ -19,10 +19,15 @@ public class CountCommand implements Command {
         }
 
         String tableName = command[0];
+        if(this.database.getLoadedTables().containsKey(tableName)){
+
+            throw new DomainException(String.format("Table %s is not loaded.",tableName));
+        }
+
         int columnIndex = Integer.parseInt(command[1]);
         String searchedValue = command[2];
 
-        Table tableImpl = this.database.getTable(tableName);
+        Table tableImpl = this.database.getLoadedTables().get(tableName);
 
         MessageLogger.log(tableImpl.getCountRowsContainAt(columnIndex,searchedValue));
     }
