@@ -1,7 +1,5 @@
 package models.command;
-
 import interfaces.Command;
-import interfaces.Database;
 import models.common.MessageLogger;
 
 import java.util.Map;

@@ -1,7 +1,6 @@
 package models.command;
 import interfaces.Command;
 import interfaces.Database;
-import interfaces.Table;
 import models.common.MessageLogger;
 import models.exception.DomainException;
 

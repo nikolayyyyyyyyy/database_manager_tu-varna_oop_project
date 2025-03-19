@@ -1,5 +1,4 @@
 package models.command;
-
 import models.exception.DomainException;
 import interfaces.Command;
 import interfaces.Database;

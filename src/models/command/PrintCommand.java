@@ -1,5 +1,4 @@
 package models.command;
-
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;

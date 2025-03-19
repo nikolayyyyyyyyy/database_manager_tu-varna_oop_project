@@ -5,7 +5,6 @@ import interfaces.Database;
 import interfaces.Table;
 import models.common.MessageLogger;
 
-
 /**
  * Клас, който имплементира командата за актуализиране на стойности в редове на таблица.
  * Тази команда актуализира стойността на дадена колона в таблица, ако се намери съвпадение
