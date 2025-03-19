@@ -1,0 +1,3 @@
+Name: person_id, Type: INTEGER, Name: person_name, Type: STRING, Name: car_id, Type: INTEGER
+person_id: 1, person_name: Nikolay, car_id: 1
+person_id: 2, person_name: Atannas, car_id: 3

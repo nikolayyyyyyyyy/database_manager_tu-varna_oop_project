@@ -1,0 +1,7 @@
+Name: auto_id, Type: INTEGER, Name: auto_model, Type: STRING
+auto_id: 1, auto_model: AUDI
+auto_id: 2, auto_model: BMW
+auto_id: 3, auto_model: Opel
+auto_id: 4, auto_model: Jaguar
+auto_id: 5, auto_model: Mitsubishi
+auto_id: 6, auto_model: Volvo
