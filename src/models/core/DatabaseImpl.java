@@ -14,21 +14,40 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Имплементация на интерфейса {@link Database}, която предоставя функционалности за управление на таблици в база от данни.
+ * Тази класа позволява зареждане, записване, променяне и обединяване на таблици в базата.
+ */
 public class DatabaseImpl implements Database {
     private final Map<String, Table> tables;
     private final Path baseDirectory;
 
+    /**
+     * Конструктор за създаване на нова база от данни с начален каталог за таблици.
+     */
     public DatabaseImpl() {
         this.tables = new LinkedHashMap<>();
         this.baseDirectory = Path.of("Catalog");
         validateDirectory();
     }
 
+    /**
+     * Връща основната директория на базата от данни, където се съхраняват таблиците.
+     *
+     * @return Път до основната директория.
+     */
     @Override
     public Path getBaseDirectory() {
         return this.baseDirectory;
     }
 
+    /**
+     * Връща таблица по нейното име.
+     *
+     * @param tableName Името на таблицата.
+     * @return Обект от тип {@code Table}.
+     * @throws DomainException Ако таблицата не е заредена.
+     */
     @Override
     public Table getTable(String tableName) {
         if(!this.tables.containsKey(tableName)){
@@ -39,6 +58,13 @@ public class DatabaseImpl implements Database {
         return this.tables.get(tableName);
     }
 
+    /**
+     * Зарежда таблица от файл, ако таблицата не съществува, тя се създава.
+     * Ако файлът съдържа редове и колони, те се добавят към таблицата.
+     *
+     * @param fileName Името на файла за таблицата.
+     * @throws IOException Ако възникне проблем при работа с файловете.
+     */
     @Override
     public void openTable(String fileName) throws IOException {
         if (!baseDirectory.resolve(fileName).toFile().exists()) {
@@ -87,6 +113,12 @@ public class DatabaseImpl implements Database {
         this.tables.put(table.getName(),table);
     }
 
+    /**
+     * Записва таблица с ново име в основната директория.
+     *
+     * @param table Името на таблицата за запазване.
+     * @param newTableName Новото име за таблицата.
+     */
     @Override
     public void saveTableAs(String table, String newTableName) {
         if(!this.tables.containsKey(table)){
@@ -99,6 +131,11 @@ public class DatabaseImpl implements Database {
         saveTable(renamedTable.getName());
     }
 
+    /**
+     * Затваря заредена таблица и я премахва от базата от данни.
+     *
+     * @param tableName Името на таблицата за затваряне.
+     */
     @Override
     public void closeTable(String tableName) {
         if(!this.tables.containsKey(tableName)){
@@ -109,6 +146,11 @@ public class DatabaseImpl implements Database {
         this.tables.remove(tableName);
     }
 
+    /**
+     * Записва съдържанието на таблица в основната директория.
+     *
+     * @param tableName Името на таблицата за запис.
+     */
     @Override
     public void saveTable(String tableName){
         try {
@@ -130,6 +172,11 @@ public class DatabaseImpl implements Database {
         }
     }
 
+    /**
+     * Връща текст с всички заредени таблици.
+     *
+     * @return Стринг, съдържащ имената на заредените таблици.
+     */
     @Override
     public String printLoadedTables() {
         StringBuilder sb = new StringBuilder();
@@ -148,6 +195,15 @@ public class DatabaseImpl implements Database {
         return sb.toString().trim();
     }
 
+    /**
+     * Извършва обединение на две таблици по съвпадение на стойности в посочени колони.
+     *
+     * @param firstTable Името на първата таблица.
+     * @param firstColIndex Индекс на колоната в първата таблица за обединение.
+     * @param secondTable Името на втората таблица.
+     * @param secondColIndex Индекс на колоната във втората таблица за обединение.
+     * @return Стринг с името на новосъздадената обединена таблица.
+     */
     @Override
     public String innerJoinTables(String firstTable, int firstColIndex,
                                   String secondTable, int secondColIndex) {
@@ -199,6 +255,9 @@ public class DatabaseImpl implements Database {
 
         return "Joined table: " + joinedTable.getName();
     }
+    /**
+     * Проверява дали основната директория за таблиците съществува и я създава, ако е необходимо.
+     */
     private void validateDirectory() {
         try {
             if (!this.baseDirectory.toFile().exists()) {

@@ -6,6 +6,11 @@ import models.common.MessageLogger;
 
 import java.util.Map;
 
+
+/**
+ * Клас, който имплементира командата за извеждане на помощна информация за наличните команди.
+ * Тази команда показва списък с всички поддържани команди и тяхното описание.
+ */
 public class HelpCommand implements Command {
     private final Map<String,String> help;
 
@@ -18,6 +23,13 @@ public class HelpCommand implements Command {
                 "help","prints this information",
                 "exit","exists the program");    }
 
+    /**
+     * Изпълнява командата за извеждане на помощна информация за наличните команди.
+     * Тази команда генерира списък с всички налични команди и тяхното описание,
+     * след което ги извежда в конзолата.
+     *
+     * @param command Параметри за изпълнение на командата (не се използват в този случай).
+     */
     @Override
     public void execute(String... command) {
         StringBuilder stringBuilder = new StringBuilder();

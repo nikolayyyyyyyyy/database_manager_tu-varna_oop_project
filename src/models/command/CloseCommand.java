@@ -4,7 +4,10 @@ import interfaces.Command;
 import interfaces.Database;
 import models.common.MessageLogger;
 import models.exception.DomainException;
-
+/**
+ * Клас, който имплементира командата за затваряне на таблица в базата данни.
+ * Тази команда извършва операция по затваряне на таблица, като прекратява достъпа до нея.
+ */
 public class CloseCommand implements Command {
     private final Database database;
 
@@ -12,6 +15,17 @@ public class CloseCommand implements Command {
         this.database = database;
     }
 
+    /**
+     * Изпълнява командата за затваряне на таблица в базата данни.
+     * Изисква един параметър:
+     * <ol>
+     *     <li>Името на таблицата, която трябва да се затвори.</li>
+     * </ol>
+     * Ако параметърът не е подаден правилно, хвърля {@link DomainException}.
+     *
+     * @param command Параметър с името на таблицата, която трябва да се затвори.
+     * @throws DomainException Ако не е подаден правилен брой параметри.
+     */
     @Override
     public void execute(String... command) {
         if(command.length != 1){

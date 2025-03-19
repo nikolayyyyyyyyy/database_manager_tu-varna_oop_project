@@ -4,6 +4,10 @@ import models.enums.ColumnOperation;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * Интерфейс, който описва операциите, които могат да се извършват върху таблица в база данни.
+ * Таблицата съдържа колони и редове и предлага възможности за манипулиране на данни в тях.
+ */
 public interface Table {
 
     double aggregate(int columnIndex, String value,int targetColumnIndex, ColumnOperation columnOperation);

@@ -4,6 +4,10 @@ import interfaces.Database;
 import interfaces.Table;
 import java.util.Arrays;
 
+/**
+ * Клас, който имплементира командата за добавяне на ред в таблица.
+ * Тази команда добавя нов ред със зададени стойности в конкретна таблица.
+ */
 public class InsertCommand implements Command {
     private final Database database;
 
@@ -11,6 +15,13 @@ public class InsertCommand implements Command {
         this.database = database;
     }
 
+    /**
+     * Изпълнява командата за добавяне на нов ред в таблица.
+     * Стойностите за новия ред се подават като параметри.
+     *
+     * @param command Параметри за командата, където първият параметър е името на таблицата,
+     *                а останалите са стойностите за новия ред.
+     */
     @Override
     public void execute(String... command) {
         String tableName = command[0];

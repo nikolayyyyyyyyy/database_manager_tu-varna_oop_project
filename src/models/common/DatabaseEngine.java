@@ -8,18 +8,32 @@ import models.core.DatabaseImpl;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Имплементация на интерфейса {@link Engine}, който предоставя основната логика за управление на базата данни чрез изпълнение на команди.
+ * Тази класа предоставя механизъм за стартиране на команден ред за работа с база от данни.
+ */
 public class DatabaseEngine implements Engine {
 
     private final Database database;
     private final Map<String, Command> commands;
 
-    public DatabaseEngine() {
+    /**
+     * Конструктор за създаване на нов {@code DatabaseEngine}.
+     * Приема обект на {@code Database} за работа с базата данни и инициализира наличните команди.
+     *
+     * @param database Обект, който представлява базата данни, върху която ще се изпълняват командите.
+     */
+    public DatabaseEngine(Database database) {
 
-        database = new DatabaseImpl();
+        this.database = database;
         this.commands = new LinkedHashMap<>();
         initCommands(this.commands);
     }
 
+    /**
+     * Стартира командния ред и започва да обработва въведените команди от потребителя.
+     * Когато потребителят въведе команда, тя се изпълнява и обработват евентуални грешки.
+     */
     @Override
     public void run()  {
         Scanner scanner = new Scanner(System.in);
@@ -54,6 +68,12 @@ public class DatabaseEngine implements Engine {
         }
     }
 
+    /**
+     * Инициализира командите, които могат да се изпълняват в системата.
+     * Събира командите в {@code commands} карта, където ключът е командата, а стойността е обектът, който я изпълнява.
+     *
+     * @param commands Списък с всички възможни команди.
+     */
     private void initCommands(Map<String, Command> commands) {
         commands.put("addcolumn", new AddColumnCommand(this.database));
         commands.put("close", new CloseCommand(this.database));

@@ -6,18 +6,25 @@ import interfaces.Table;
 import models.common.MessageLogger;
 import models.enums.ColumnOperation;
 import models.enums.ColumnType;
-
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Имплементация на интерфейса {@link Table}, която предоставя функционалности за
+ * управление на редове и колони в таблица.
+ */
 public class TableImpl implements Table {
     private String name;
     private final List<Column> columns;
     private final List<Row> rows;
     private final Scanner scanner;
 
+    /**
+     * Конструктор за създаване на нова таблица с дадено име.
+     *
+     * @param name Името на таблицата.
+     */
     public TableImpl(String name) {
         this.name = name;
         this.columns = new ArrayList<>();
@@ -40,6 +47,11 @@ public class TableImpl implements Table {
         return name;
     }
 
+    /**
+     * Отпечатва типовете на всички колони в таблицата.
+     *
+     * @return Текст с типовете на колоните или съобщение, ако няма колони.
+     */
     @Override
     public String printColumnTypes() {
         if(this.columns.isEmpty()){
@@ -56,6 +68,9 @@ public class TableImpl implements Table {
         return stringBuilder.toString().trim();
     }
 
+    /**
+     * Отпечатва всички редове в таблицата с възможност за странично преглеждане.
+     */
     @Override
     public void printRows() {
         if(this.rows.isEmpty()){
@@ -67,6 +82,12 @@ public class TableImpl implements Table {
         }
     }
 
+    /**
+     * Извършва селекция на всички редове, които съдържат дадена стойност в посочената колона.
+     *
+     * @param columnIndex Индекс на колоната.
+     * @param value Стойността за търсене в колоната.
+     */
     @Override
     public void selectAllRowsContain(int columnIndex,String value) {
         if(isIndexOutOfRange(columnIndex)){
@@ -89,6 +110,12 @@ public class TableImpl implements Table {
         }
     }
 
+    /**
+     * Добавя нова колона в таблицата.
+     * Ако таблицата съдържа редове, за всяка от тях се добавя стойност "Null" за новата колона.
+     *
+     * @param column Новата колона, която да бъде добавена.
+     */
     @Override
     public void addColumn(Column column) {
         this.columns.add(column);
@@ -101,6 +128,15 @@ public class TableImpl implements Table {
         }
     }
 
+    /**
+     * Обновява стойностите в дадена колона на редовете, които съдържат определена стойност.
+     *
+     * @param index Индекс на колоната, в която ще се извърши търсенето.
+     * @param targetIndex Индекс на колоната, в която ще се извършва актуализацията.
+     * @param oldValue Стойността, която ще се търси за замяна.
+     * @param newValue Новата стойност, с която ще се замести старата.
+     * @return Съобщение за броя на засегнатите редове.
+     */
     @Override
     public String updateRowValueAtIndexWhereContainsAt(int index,int targetIndex, String oldValue, String newValue) {
         if(isIndexOutOfRange(index) || isIndexOutOfRange(targetIndex)){
@@ -125,6 +161,13 @@ public class TableImpl implements Table {
         return String.format("%d rows affected.",rows.size());
     }
 
+    /**
+     * Изтрива редове от таблицата, които съдържат дадена стойност в определена колона.
+     *
+     * @param index Индекс на колоната.
+     * @param value Стойността, за която да се изтрият редовете.
+     * @return Съобщение за броя на изтритите редове.
+     */
     @Override
     public String deleteTableWhereRowContainsAt(int index, String value) {
         if(isIndexOutOfRange(index)){
@@ -146,6 +189,11 @@ public class TableImpl implements Table {
         return "0 rows affected.";
     }
 
+    /**
+     * Добавя нов ред в таблицата с подадените стойности.
+     *
+     * @param values Массив със стойности за новия ред.
+     */
     @Override
     public void addRow(String[] values) {
         if(values.length != this.columns.size()){
@@ -162,6 +210,13 @@ public class TableImpl implements Table {
         }
     }
 
+    /**
+     * Променя името на таблицата.
+     * Ако таблицата с новото име вече съществува, се хвърля изключение.
+     *
+     * @param baseDirectory Директорията, в която се намира базата данни.
+     * @param name Новото име на таблицата.
+     */
     @Override
     public void rename(Path baseDirectory, String name) {
         if(baseDirectory.resolve(name).toFile().exists()){
@@ -171,6 +226,13 @@ public class TableImpl implements Table {
         this.name = name;
     }
 
+    /**
+     * Връща броя на редовете, които съдържат дадена стойност в посочената колона.
+     *
+     * @param index Индекс на колоната.
+     * @param value Стойността, която се търси.
+     * @return Броят на редовете, които съдържат стойността.
+     */
     @Override
     public int getCountRowsContainAt(int index,String value) {
         if(isIndexOutOfRange(index)){
@@ -185,6 +247,15 @@ public class TableImpl implements Table {
                 .count();
     }
 
+    /**
+     * Извършва агрегация върху данни в таблицата. Поддържат се операциите: MAXIMUM, MINIMUM, PRODUCT и SUM.
+     *
+     * @param columnIndex Индекс на колоната, в която ще се извършва търсенето.
+     * @param value Стойността, за която ще се извършва агрегацията.
+     * @param targetColumnIndex Индекс на колоната, върху която ще се извършва агрегацията.
+     * @param columnOperation Тип на агрегацията (MAXIMUM, MINIMUM, PRODUCT, SUM).
+     * @return Резултатът от агрегацията.
+     */
     @Override
     public double aggregate(int columnIndex, String value, int targetColumnIndex , ColumnOperation columnOperation) {
         if(isIndexOutOfRange(columnIndex) || isIndexOutOfRange(targetColumnIndex)){

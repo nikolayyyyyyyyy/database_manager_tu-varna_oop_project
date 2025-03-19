@@ -4,6 +4,10 @@ import interfaces.Command;
 import interfaces.Database;
 import models.common.MessageLogger;
 
+/**
+ * Клас, който имплементира командата за съединяване (join) на две таблици.
+ * Тази команда изпълнява вътрешно съединяване (INNER JOIN) на две таблици по зададени колони.
+ */
 public class JoinCommand implements Command {
     private final Database database;
 
@@ -12,6 +16,17 @@ public class JoinCommand implements Command {
         this.database = database;
     }
 
+    /**
+     * Изпълнява командата за съединяване на две таблици.
+     * Съединяването се извършва по зададени индекси на колони от двете таблици.
+     *
+     * @param command Параметри за командата, като първият параметър е името на първата таблица,
+     *                вторият параметър е индексът на колоната от първата таблица,
+     *                третият параметър е името на втората таблица,
+     *                а четвъртият параметър е индексът на колоната от втората таблица.
+     *
+     * @throws DomainException Ако не са подадени точно 4 параметъра.
+     */
     @Override
     public void execute(String... command) {
         if(command.length != 4){

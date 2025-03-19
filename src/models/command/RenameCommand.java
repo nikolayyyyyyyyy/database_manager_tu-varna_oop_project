@@ -5,6 +5,10 @@ import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
 
+/**
+ * Клас, който имплементира командата за преименуване на таблица в базата данни.
+ * Тази команда позволява преименуването на съществуваща таблица в ново име.
+ */
 public class RenameCommand implements Command {
     private final Database database;
 
@@ -12,6 +16,15 @@ public class RenameCommand implements Command {
         this.database = database;
     }
 
+    /**
+     * Изпълнява командата за преименуване на таблица.
+     * Преименува таблицата с даденото ново име.
+     *
+     * @param command Параметрите на командата, като първият параметър е името на таблицата,
+     *                а вторият е новото име на таблицата.
+     *
+     * @throws DomainException Ако не са подадени точно 2 параметъра за командата (старото име и новото име).
+     */
     @Override
     public void execute(String... command) {
         if(command.length != 2){

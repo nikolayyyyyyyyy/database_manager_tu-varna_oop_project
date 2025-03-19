@@ -2,6 +2,10 @@ package models.core;
 import interfaces.Column;
 import models.enums.ColumnType;
 
+/**
+ * Имплементация на интерфейса {@link Column}, представляваща колона в таблица.
+ * Тази класа съдържа информация за името на колоната и нейния тип.
+ */
 public class ColumnImpl implements Column {
     private final String name;
     private final ColumnType type;

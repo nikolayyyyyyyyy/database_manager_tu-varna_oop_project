@@ -1,4 +1,9 @@
 package models.common;
+
+/**
+ * Клас за логване на съобщения в конзолата.
+ * Осигурява статични методи за извеждане на съобщения от различен тип.
+ */
 public class MessageLogger {
 
     public static void log(String message){

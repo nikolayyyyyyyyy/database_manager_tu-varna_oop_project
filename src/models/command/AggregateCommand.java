@@ -7,6 +7,11 @@ import models.common.MessageLogger;
 import models.enums.ColumnOperation;
 import models.exception.DomainException;
 
+
+/**
+ * Клас, който имплементира командата за агрегиране на стойности в дадена таблица.
+ * Тази команда извършва агрегация върху данни в определена колона, използвайки посочена операция.
+ */
 public class AggregateCommand implements Command {
     private final Database database;
 
@@ -14,6 +19,21 @@ public class AggregateCommand implements Command {
         this.database = database;
     }
 
+    /**
+     * Изпълнява командата за агрегация на стойности в дадена таблица.
+     * Изисква пет параметъра:
+     * <ol>
+     *     <li>Името на таблицата</li>
+     *     <li>Индекс на колоната, която ще се търси</li>
+     *     <li>Стойност за търсене в колоната</li>
+     *     <li>Индекс на целевата колона, върху която ще се извършва агрегацията</li>
+     *     <li>Операция за агрегация (например, SUM, AVG, COUNT и т.н.)</li>
+     * </ol>
+     * Ако параметрите не са правилни, хвърля {@link DomainException}.
+     *
+     * @param command Параметри за изпълнение на командата: име на таблицата, индекси на колони и операция.
+     * @throws DomainException Ако не са подадени правилен брой параметри или има грешка при изпълнението на командата.
+     */
     @Override
     public void execute(String... command) {
         if(command.length != 5){

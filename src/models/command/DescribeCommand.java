@@ -6,6 +6,10 @@ import interfaces.Table;
 import models.common.MessageLogger;
 import models.exception.DomainException;
 
+/**
+ * Клас, който имплементира командата за извеждане на описание на структурата на таблицата.
+ * Тази команда извежда информация за типовете на колоните в дадената таблица.
+ */
 public class DescribeCommand implements Command {
     private final Database database;
 
@@ -13,6 +17,17 @@ public class DescribeCommand implements Command {
         this.database = database;
     }
 
+    /**
+     * Изпълнява командата за извеждане на описание на структурата на таблицата.
+     * Изисква един параметър:
+     * <ol>
+     *     <li>Името на таблицата, за която ще се извеждат типовете на колоните.</li>
+     * </ol>
+     * Ако параметрите не са подадени правилно, хвърля {@link DomainException}.
+     *
+     * @param command Параметри за изпълнение на командата: име на таблицата.
+     * @throws DomainException Ако не е подаден точно един параметър.
+     */
     @Override
     public void execute(String... command) {
         if(command.length != 1){
