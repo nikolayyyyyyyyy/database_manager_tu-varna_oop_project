@@ -2,8 +2,6 @@ package models.command;
 import interfaces.Command;
 import interfaces.Database;
 import interfaces.Table;
-import models.exception.DomainException;
-
 import java.util.Arrays;
 
 public class InsertCommand implements Command {
@@ -16,14 +14,9 @@ public class InsertCommand implements Command {
     @Override
     public void execute(String... command) {
         String tableName = command[0];
-        if(!this.database.getLoadedTables().containsKey(tableName)){
-
-            throw new DomainException(String.format("Table %s does not exist",tableName));
-        }
-
         String[] values = Arrays.stream(command).skip(1).toArray(String[]::new);
 
-        Table tableImpl = this.database.getLoadedTables().get(tableName);
+        Table tableImpl = this.database.getTable(tableName);
         tableImpl.addRow(values);
     }
 }

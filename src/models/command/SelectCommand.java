@@ -21,15 +21,10 @@ public class SelectCommand implements Command {
         }
 
         String tableName = command[2];
-        if(!this.database.getLoadedTables().containsKey(tableName)){
-
-            throw new DomainException(String.format("Table %s is not loaded.",tableName));
-        }
-
         int columnIndex = Integer.parseInt(command[0]);
         String searchedValue = command[1];
 
-        Table tableImpl = database.getLoadedTables().get(tableName);
+        Table tableImpl = database.getTable(tableName);
         tableImpl.selectAllRowsContain(columnIndex,searchedValue);
     }
 }

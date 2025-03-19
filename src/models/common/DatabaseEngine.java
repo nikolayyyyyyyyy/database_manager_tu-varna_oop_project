@@ -11,26 +11,23 @@ import java.util.*;
 public class DatabaseEngine implements Engine {
 
     private final Database database;
-    private final Scanner scanner;
     private final Map<String, Command> commands;
 
     public DatabaseEngine() {
 
         database = new DatabaseImpl();
-        scanner = new Scanner(System.in);
         this.commands = new LinkedHashMap<>();
         initCommands(this.commands);
     }
 
     @Override
     public void run()  {
+        Scanner scanner = new Scanner(System.in);
         Command command;
-        TextFileManager.createBaseDirectoryIfNotExist();
 
         while(true){
-
             System.out.print("> ");
-            String input = this.scanner.nextLine();
+            String input = scanner.nextLine();
             String[] arguments = input.split(" ");
 
             if(this.commands.containsKey(arguments[0])) {

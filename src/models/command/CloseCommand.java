@@ -18,12 +18,7 @@ public class CloseCommand implements Command {
             throw new DomainException("For close commands are required 1 arg.");
         }
 
-        if(!this.database.getLoadedTables().containsKey(command[0])){
-
-            throw new DomainException(String.format("Table %s is not loaded.",command[0]));
-        }
-
-        this.database.getLoadedTables().remove(command[0]);
+        this.database.closeTable(command[0]);
         MessageLogger.log("Closed table -> ".concat(command[0]));
     }
 }

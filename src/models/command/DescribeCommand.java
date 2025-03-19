@@ -20,12 +20,8 @@ public class DescribeCommand implements Command {
         }
 
         String tableName = command[0];
-        if(!this.database.getLoadedTables().containsKey(tableName)){
 
-            throw new DomainException(String.format("Table %s is not loaded.",tableName));
-        }
-
-        Table tableImpl = this.database.getLoadedTables().get(tableName);
+        Table tableImpl = this.database.getTable(tableName);
         MessageLogger.log(tableImpl.printColumnTypes());
     }
 }

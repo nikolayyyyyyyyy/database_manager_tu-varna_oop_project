@@ -19,13 +19,8 @@ public class PrintCommand implements Command {
         }
 
         String tableName = command[0];
-        if(!this.database.getLoadedTables().containsKey(tableName)){
-
-            throw new DomainException(String.format("Table %s does not exist.",tableName));
-        }
-
         Table table =  this.database
-                .getLoadedTables().get(tableName);
+                .getTable(tableName);
 
         table.printRows();
     }
