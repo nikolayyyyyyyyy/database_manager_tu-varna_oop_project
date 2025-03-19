@@ -89,7 +89,7 @@ public class DatabaseImpl implements Database {
 
     @Override
     public void saveTableAs(String table, String newTableName) {
-        if(this.tables.containsKey(table)){
+        if(!this.tables.containsKey(table)){
 
             throw new DomainException(String.format("Table %s is not loaded.",table));
         }
