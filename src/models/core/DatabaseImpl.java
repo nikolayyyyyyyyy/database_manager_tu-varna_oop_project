@@ -1,6 +1,7 @@
 package models.core;
 import interfaces.Column;
 import interfaces.Database;
+import models.command.ExitCommand;
 import models.common.MessageLogger;
 import models.enums.ColumnType;
 import models.exception.DomainException;
@@ -20,6 +21,7 @@ public class DatabaseImpl implements Database {
     public DatabaseImpl() {
         this.tables = new LinkedHashMap<>();
         this.baseDirectory = Path.of("Catalog");
+        validateDirectory();
     }
 
     @Override
@@ -38,60 +40,51 @@ public class DatabaseImpl implements Database {
     }
 
     @Override
-    public void openTable(String fileName){
-        try {
-            if (!baseDirectory.resolve(fileName).toFile().exists()) {
+    public void openTable(String fileName) throws IOException {
+        if (!baseDirectory.resolve(fileName).toFile().exists()) {
 
-                Files.createFile(baseDirectory.resolve(fileName));
-            }
-
-            Table table = new TableImpl(fileName);
-            if (!Files.readAllLines(baseDirectory.resolve(fileName)).isEmpty()) {
-
-
-                String[] columnPairs = Files
-                        .readAllLines(baseDirectory.resolve(fileName))
-                        .get(0)
-                        .split(", ");
-
-                for (int i = 0; i < columnPairs.length; i += 2) {
-                    String name = columnPairs[i].split(": ")[1].trim();
-                    String type = columnPairs[i + 1].split(": ")[1].trim();
-                    Column column = new ColumnImpl(name, ColumnType.valueOf(type));
-
-                    table.addColumn(column);
-                }
-
-                List<String> rows = Files
-                        .readAllLines(baseDirectory.resolve(fileName))
-                        .stream()
-                        .skip(1)
-                        .collect(Collectors.toList());
-
-                for (String row :
-                        rows) {
-                    String[] records = Arrays.stream(row.split(", "))
-                            .map(r -> r.split(": "))
-                            .map(sr -> sr[1])
-                            .toArray(String[]::new);
-
-                    table.addRow(records);
-                }
-            }
-
-            if(this.tables.containsKey(table.getName())){
-
-                throw new DomainException(String.format("Table %s is already loaded.",table.getName()));
-            }
-            this.tables.put(table.getName(),table);
-        } catch (IOException exception){
-
-            MessageLogger.log(String.format("Error opening table %s",fileName));
-            System.exit(0);
-        } catch (DomainException domainException){
-
-            MessageLogger.log(domainException.getMessage());
+            Files.createFile(baseDirectory.resolve(fileName));
         }
+
+        Table table = new TableImpl(fileName);
+        if (!Files.readAllLines(baseDirectory.resolve(fileName)).isEmpty()) {
+
+
+            String[] columnPairs = Files
+                    .readAllLines(baseDirectory.resolve(fileName))
+                    .get(0)
+                    .split(", ");
+
+            for (int i = 0; i < columnPairs.length; i += 2) {
+                String name = columnPairs[i].split(": ")[1].trim();
+                String type = columnPairs[i + 1].split(": ")[1].trim();
+                Column column = new ColumnImpl(name, ColumnType.valueOf(type));
+
+                table.addColumn(column);
+            }
+
+            List<String> rows = Files
+                    .readAllLines(baseDirectory.resolve(fileName))
+                    .stream()
+                    .skip(1)
+                    .collect(Collectors.toList());
+
+            for (String row :
+                    rows) {
+                String[] records = Arrays.stream(row.split(", "))
+                        .map(r -> r.split(": "))
+                        .map(sr -> sr[1])
+                        .toArray(String[]::new);
+
+                table.addRow(records);
+            }
+        }
+
+        if(this.tables.containsKey(table.getName())){
+
+            throw new DomainException(String.format("Table %s is already loaded.",table.getName()));
+        }
+        this.tables.put(table.getName(),table);
     }
 
     @Override
@@ -205,5 +198,16 @@ public class DatabaseImpl implements Database {
         this.tables.put(joinedTable.getName(),joinedTable);
 
         return "Joined table: " + joinedTable.getName();
+    }
+    private void validateDirectory() {
+        try {
+            if (!this.baseDirectory.toFile().exists()) {
+                Files.createDirectory(this.baseDirectory);
+            }
+        }catch (IOException e){
+
+            MessageLogger.log("IO exception.");
+            new ExitCommand().execute();
+        }
     }
 }

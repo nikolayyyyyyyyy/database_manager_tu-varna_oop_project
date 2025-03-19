@@ -26,6 +26,7 @@ public class DatabaseEngine implements Engine {
         Command command;
 
         while(true){
+
             System.out.print("> ");
             String input = scanner.nextLine();
             String[] arguments = input.split(" ");
@@ -38,9 +39,13 @@ public class DatabaseEngine implements Engine {
                             .stream(arguments)
                             .skip(1)
                             .toArray(String[]::new));
-                }catch (DomainException | IOException exception){
+                }catch (DomainException exception){
 
                     MessageLogger.log(exception.getMessage());
+                } catch ( IOException exception){
+
+                    MessageLogger.log("IO exception.");
+                    new ExitCommand().execute();
                 }
             } else {
 
