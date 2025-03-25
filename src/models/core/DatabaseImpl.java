@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 /**
  * Имплементация на интерфейса {@link Database}, която предоставя функционалности за управление на таблици в база от данни.
- * Тази класа позволява зареждане, записване, променяне и обединяване на таблици в базата.
+ * Този клас позволява зареждане, записване, променяне и обединяване на таблици в базата.
  */
 public class DatabaseImpl implements Database {
     private final Map<String, Table> tables;
@@ -175,7 +175,7 @@ public class DatabaseImpl implements Database {
     /**
      * Връща текст с всички заредени таблици.
      *
-     * @return Стринг, съдържащ имената на заредените таблици.
+     * @return Текст, съдържащ имената на заредените таблици.
      */
     @Override
     public String printLoadedTables() {

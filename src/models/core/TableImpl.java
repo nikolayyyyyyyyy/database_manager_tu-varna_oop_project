@@ -48,9 +48,9 @@ public class TableImpl implements Table {
     }
 
     /**
-     * Отпечатва типовете на всички колони в таблицата.
+     * Отпечатва тип и име на всички колони в таблицата.
      *
-     * @return Текст с типовете на колоните или съобщение, ако няма колони.
+     * @return Текст с типа и името на колоните или съобщение, ако няма колони.
      */
     @Override
     public String printColumnTypes() {
@@ -192,7 +192,7 @@ public class TableImpl implements Table {
     /**
      * Добавя нов ред в таблицата с подадените стойности.
      *
-     * @param values Массив със стойности за новия ред.
+     * @param values Масив със стойности за новия ред.
      */
     @Override
     public void addRow(String[] values) {
@@ -214,7 +214,7 @@ public class TableImpl implements Table {
      * Променя името на таблицата.
      * Ако таблицата с новото име вече съществува, се хвърля изключение.
      *
-     * @param baseDirectory Директорията, в която се намира базата данни.
+     * @param baseDirectory Директорията, в която се намират таблиците.
      * @param name Новото име на таблицата.
      */
     @Override
@@ -251,7 +251,7 @@ public class TableImpl implements Table {
      * Извършва агрегация върху данни в таблицата. Поддържат се операциите: MAXIMUM, MINIMUM, PRODUCT и SUM.
      *
      * @param columnIndex Индекс на колоната, в която ще се извършва търсенето.
-     * @param value Стойността, за която ще се извършва агрегацията.
+     * @param value Стойността, която ще се търси в колоната.
      * @param targetColumnIndex Индекс на колоната, върху която ще се извършва агрегацията.
      * @param columnOperation Тип на агрегацията (MAXIMUM, MINIMUM, PRODUCT, SUM).
      * @return Резултатът от агрегацията.
