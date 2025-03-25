@@ -1,7 +1,6 @@
 package models.command;
 import interfaces.Command;
 import models.common.MessageLogger;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
